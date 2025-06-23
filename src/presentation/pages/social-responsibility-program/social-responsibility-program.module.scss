@@ -1,0 +1,117 @@
+@import '../../styles/themes/light.scss';
+@import '../../styles/themes/mixins.scss';
+
+.socialResponsibilityContainer {
+  background: #f6f6f6;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+ 
+}
+
+.socialResponsibilityContent {
+  margin: 8rem 0 4rem 0;
+ 
+  max-width: 1280px;
+  width: 100%;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.07);
+  padding: 56px 48px 48px 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  @media (max-width: 900px) {
+    padding: 32px 12px 28px 12px;
+    margin: 7rem 0 4rem 0!important;
+    border-radius: 10px;
+    border: 1px solid red;
+  }
+
+  .socialEmpresa {
+    color: #111;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    margin-top: 0;
+    text-align: left;
+  }
+
+  .socialTitle {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #111;
+    margin-bottom: 2.2rem;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    text-align: left;
+    @media (max-width: 700px) {
+      font-size: 1.5rem;
+      margin-bottom: 1.2rem;
+    }
+  }
+
+  h2 {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: $color-primary;
+    margin-top: 2.5rem;
+    margin-bottom: 0.7rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    text-align: left;
+    @media (max-width: 700px) {
+      font-size: 1rem;
+      margin-top: 1.5rem;
+    }
+  }
+
+  ul {
+    padding-left: 1.3em;
+    margin-bottom: 1.5rem;
+  }
+
+  li {
+    margin-bottom: 0.7rem;
+    list-style: disc inside;
+    font-size: 1.08rem;
+    color: #222;
+    line-height: 1.8;
+    font-weight: 400;
+    text-align: left;
+  }
+
+  p {
+    font-size: 1.08rem;
+    color: #222;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+    text-align: left;
+  }
+
+  .socialFinal {
+    font-size: 1.08rem;
+    color: $color-primary;
+    font-weight: 600;
+    margin-top: 40px;
+    margin-bottom: 10px;
+  }
+}
+
+@media (max-width: 500px) {
+  .socialResponsibilityContent {
+    padding: 10px 2vw 14px 2vw;
+    margin: 10px 0 14px 0;
+  }
+  .socialResponsibilityContent .socialTitle {
+    font-size: 1.1rem;
+  }
+  .socialResponsibilityContent h2 {
+    font-size: 0.95rem;
+    margin-top: 1rem;
+  }
+}

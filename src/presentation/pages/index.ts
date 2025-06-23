@@ -1,0 +1,7 @@
+export { default as Home } from './home/home'
+export { default as PrivacyPolicy } from './privacy-policy/privacy-policy'
+export { default as OpenAccount } from './open-account/open-account'
+export { default as CorruptionPolicy } from './corruption-policy/corruption-policy'
+export { default as KycPolicy } from './kyc-policy/kyc-policy'
+export { default as EthicsCode } from './ethics-code/ethics-code'
+export { default as SocialResponsibilityProgram } from './social-responsibility-program/social-responsibility-program'

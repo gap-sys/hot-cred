@@ -1,0 +1,11 @@
+@import '../../../styles/themes/light.scss';
+@import '../../../styles/themes/mixins.scss';
+
+.input-normal {
+  display: flex;
+  font-family: $font-default;
+  font-size: $font-small;
+  border-radius: $radii-default;
+  margin: 0.7rem 0;
+  padding: 0.6rem 1rem;
+}

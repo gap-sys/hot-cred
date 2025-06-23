@@ -1,0 +1,62 @@
+@import '../../../styles/themes/light.scss';
+@import '../../../styles/themes/mixins.scss';
+
+.modal {
+  text-align: center;
+  background-color: $color-snow;
+  color: $color-darkHigh;
+  border-radius: $radii-default;
+  @media (max-width: 880px) {
+    width: 85%;
+  }
+  .modal-content {
+    padding: 1rem 1rem 0 1rem;
+    .title {
+      font-size: $font-default;
+      font-weight: $weight-default;
+      margin-bottom: 1rem;
+      line-height: 1.4rem;
+      @media (max-width: 880px) {
+        font-size: $font-small;
+        line-height: 1.2rem;
+      }
+    }
+    .subtitle {
+      font-size: $font-medium;
+      font-weight: $weight-bold;
+      margin-bottom: 0.2rem;
+      @media (max-width: 880px) {
+        font-size: $font-medium;
+        line-height: 1.5rem;
+        margin-bottom: 0.8rem;
+      }
+    }
+    .paragraph {
+      text-align: center;
+      font-size: $font-small;
+      font-weight: $weight-default;
+      margin-bottom: 1.4rem;
+      line-height: 1.2rem;
+      @media (max-width: 880px) {
+        font-size: $font-small;
+        line-height: 1.1rem;
+      }
+    }
+    .icons-section {
+      @include display-flex;
+      gap: 1.5rem;
+      margin: 1rem 0 2.4rem 0;
+      .icon {
+        background-color: $color-grayLight;
+        color: $color-primary;
+        font-size: $font-large;
+        border-radius: 50%;
+        padding: 0.1rem;
+        @media (max-width: 880px) {
+          font-size: $font-medium;
+          padding: 0;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,113 @@
+@import '../../styles/themes/light.scss';
+@import '../../styles/themes/mixins.scss';
+
+.privacyPolicyContainer {
+  background: #f6f6f6;
+  min-height: 100vh;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.privacyPolicyContent {
+  max-width: 1280px;
+  width: 100%;
+  margin: 8rem 0 4rem 0;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.07);
+  padding: 56px 40px 48px 40px;
+  @media (max-width: 900px) {
+    padding: 32px 12px 28px 12px;
+    margin: 7rem 0 4rem 0!important;
+    border-radius: 12px;
+  }
+
+  .privacyTitle {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: #111;
+    margin-bottom: 8px;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    @media (max-width: 700px) {
+      font-size: 1.7rem;
+    }
+  }
+
+  .privacyEmpresa {
+    font-size: 1.15rem;
+    margin-bottom: 32px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  h2 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: $color-primary;
+    margin-top: 40px;
+    margin-bottom: 14px;
+    letter-spacing: -0.5px;
+    @media (max-width: 700px) {
+      font-size: 1.1rem;
+      margin-top: 24px;
+    }
+  }
+
+  h3 {
+    font-size: 1.08rem;
+    font-weight: 600;
+    color: $color-primaryHover;
+    margin-top: 24px;
+    margin-bottom: 8px;
+  }
+
+  p, ul, li {
+    font-size: 1.08rem;
+    color: #222;
+    line-height: 1.8;
+    margin-bottom: 18px;
+    font-weight: 400;
+  }
+
+  ul {
+    padding-left: 1.3em;
+    margin-bottom: 20px;
+  }
+
+  li {
+    margin-bottom: 10px;
+    list-style: disc inside;
+  }
+
+  .privacyFinal {
+    font-size: 1.08rem;
+    color: $color-primaryHover;
+    font-weight: 600;
+    margin-top: 40px;
+    margin-bottom: 10px;
+  }
+
+  .privacyVersao {
+    color: #888;
+    font-size: 0.98rem;
+    margin-bottom: 0;
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 500px) {
+  .privacyPolicyContent {
+    padding: 10px 2vw 14px 2vw;
+    margin: 10px 0 14px 0;
+  }
+  .privacyPolicyContent .privacyTitle {
+    font-size: 1.1rem;
+  }
+  .privacyPolicyContent h2 {
+    font-size: 1rem;
+    margin-top: 18px;
+  }
+}
