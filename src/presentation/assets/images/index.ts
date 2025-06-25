@@ -9,6 +9,7 @@ import BANCO_BRADESCO from './BANCO_BRADESCO.webp'
 import BANCO_ITAU from './BANCO_ITAU.webp'
 import BANCO_PAN from './BANCO_PAN.webp'
 import BANCO_C6 from './BANCO_C6.webp'
+import EQUIPE_REUNIDA from './EQUIPE_REUNIDA.webp'
 
 const IMAGE = {
   LOGO_HOT_CRED,
@@ -22,6 +23,7 @@ const IMAGE = {
   BANCO_ITAU,
   BANCO_PAN,
   BANCO_C6,
+  EQUIPE_REUNIDA,
 }
 
 export default IMAGE

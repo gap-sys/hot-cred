@@ -37,7 +37,7 @@ const Header = () => {
         </div>
         <div className={S.rightSection}>
           <img
-            src={IMAGE.HEADER_IMAGE.src}
+            src={IMAGE.EQUIPE_REUNIDA.src}
             alt="Casal feliz Nubank"
             className={S.heroImage}
           />

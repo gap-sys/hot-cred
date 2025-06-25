@@ -4,7 +4,7 @@
 .nubankHeader {
   display: flex;
   align-items: stretch;
-  justify-content: flex-start;
+  justify-content: space-between;
   background: #f6f6f6;
   min-height: 100vh;
   width: 100vw;
@@ -24,7 +24,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   align-items: flex-start;
   padding: 0 0 0 1vw;
   max-width: 540px;
@@ -43,7 +43,7 @@
 }
 
 .brand {
-  color: #820ad1;
+  color: $color-primary;
   font-size: 1.2rem;
   font-weight: 700;
   margin-bottom: 1.2rem;
@@ -106,7 +106,7 @@
 }
 
 .cpfButton {
-  background: #820ad1;
+  background: $color-primary;
   color: #fff;
   border: none;
   border-radius: 22px;
@@ -121,7 +121,7 @@
   letter-spacing: 0.01em;
 
   &:hover {
-    background: #a13be0;
+    background: $color-primaryHover;
   }
 }
 
@@ -129,7 +129,7 @@
   flex: 1;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-around;
   background: #f6f6f6;
 
   @media (max-width: 900px) {
@@ -204,7 +204,7 @@
 }
 
 .statNumber {
-  color: #820ad1;
+  color: $color-primary;
   font-size: 2.4rem;
   font-weight: 700;
   margin-bottom: 1.1rem;

@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { StepCadastro, StepEndereco, StepAcesso, SuccessPartnersModal, ErrorModal } from 'src/presentation/components';
 import { STEPS } from 'src/presentation/constants';
 import { IMAGE } from 'src/presentation/assets';
-import { useSubmissionForm } from 'src/hooks';
+import { useSubmissionForm } from 'src/hooks/use-submission-form';
 import { INITIAL_FORM } from 'src/hooks/use-submission-form';
 
 import { FaCheck, FaSpinner } from 'react-icons/fa';

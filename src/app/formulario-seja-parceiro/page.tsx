@@ -1,3 +1,3 @@
-import { makeSubmission } from 'src/main/factories/pages'
+import Submission from 'src/presentation/pages/submission/submission'
 
-export default makeSubmission
+export default Submission
