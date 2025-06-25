@@ -14,9 +14,8 @@ const Home = () => {
         keywords="HotCred, crédito pessoal, antecipação FGTS, crédito para CLT, empréstimo fácil, consultoria financeira, fintech, crédito rápido, soluções financeiras"
         image={IMAGES.src}
       />
-
       <Navbar />
-
+      <Header />
       <Benefits />
       <Path />
       <Banks />

@@ -1,3 +1,5 @@
+'use client'
+
 import InputMask from 'react-input-mask';
 import { FaSpinner, FaCheckCircle } from 'react-icons/fa';
 
