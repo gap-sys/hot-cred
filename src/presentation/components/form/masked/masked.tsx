@@ -1,7 +1,7 @@
 import InputMask from 'react-input-mask';
 import { FaSpinner, FaCheckCircle } from 'react-icons/fa';
 
-import styles from '../../../../pages/submission/submission.module.scss';
+import styles from '../../../pages/submission/submission.module.scss';
 
 type MaskedInputProps = {
     value: string;
