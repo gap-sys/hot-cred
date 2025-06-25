@@ -9,14 +9,14 @@ const Home = () => {
   return (
     <div>
       <Meta
-        title="Conta Digital HotInvest – Autonomia, rendimento e zero tarifas"
-        description="Simplifique sua vida financeira com a conta digital HotInvest. Controle total pelo app, transferências grátis, rendimento acima da poupança e sem taxas escondidas."
-        keywords="HotInvest, conta digital, cartão HotInvest, transferências grátis, rendimento CDI, conta sem tarifas, abrir conta digital, fintech"
+        title="HotCred – Soluções financeiras para o seu momento"
+        description="A HotCred conecta você às melhores soluções de crédito com agilidade, segurança e atendimento personalizado. Empréstimo, antecipação de FGTS, crédito para CLT e muito mais."
+        keywords="HotCred, crédito pessoal, antecipação FGTS, crédito para CLT, empréstimo fácil, consultoria financeira, fintech, crédito rápido, soluções financeiras"
         image={IMAGES.src}
       />
 
       <Navbar />
-      
+
       <Benefits />
       <Path />
       <Banks />

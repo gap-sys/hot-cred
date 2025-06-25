@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "src/presentation/styles/global.scss";
 
 export const metadata: Metadata = {
-  title: "HotInvest - Nenhuma taxa, todos os motivos pra escolher",
-  description: "A HotInvest é a conta digital feita para você ter mais controle, rendimento superior à poupança e zero tarifas escondidas. Abra a sua e simplifique sua vida financeira."
+  title: "HotCred – Soluções financeiras para o seu momento",
+  description: "A HotCred é a empresa financeira que oferece soluções de crédito personalizadas para atender às necessidades de cada cliente. Empréstimos, antecipação de FGTS, crédito para CLT e muito mais."
 };
 
 export default function RootLayout({

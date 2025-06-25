@@ -348,7 +348,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       notificationStatus = { error: String(err) };
     }
 
-    function formatarTelefoneWhatsApp(telefone: string): string {
+    const formatarTelefoneWhatsApp = (telefone: string): string => {
       const apenasNumeros = telefone.replace(/\D/g, '');
       const ddd = apenasNumeros.slice(0, 2);
       let numero = apenasNumeros.slice(2);

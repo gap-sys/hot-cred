@@ -9,7 +9,6 @@ import { FaInstagram, FaWhatsapp } from "react-icons/fa";
 import styles from "./footer.module.scss";
 
 export default function Footer() {
-  const pathname = typeof window !== 'undefined' ? window.location.pathname : '';
   const handleSmoothScroll = (id: string) => (e: React.MouseEvent) => {
     e.preventDefault();
     const el = document.getElementById(id);

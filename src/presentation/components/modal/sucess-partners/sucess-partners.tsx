@@ -1,24 +1,26 @@
-import Modal from 'react-modal';
+import { Modal } from 'react-responsive-modal';
+import 'react-responsive-modal/styles.css';
 
 import { IMAGE } from 'src/presentation/assets';
 
 import styles from './sucess-partners.module.scss';
 
-export const SuccessPartnersModal = ({ 
-    isOpen, 
-    onRequestClose, 
-    contractSentSuccessfully = true 
-}: { 
-    isOpen: boolean; 
+export const SuccessPartnersModal = ({
+    isOpen,
+    onRequestClose,
+    contractSentSuccessfully = true
+}: {
+    isOpen: boolean;
     onRequestClose: () => void;
     contractSentSuccessfully?: boolean;
 }) => (
     <Modal
-        isOpen={isOpen}
-        onRequestClose={onRequestClose}
-        className={styles.modal}
-        overlayClassName={styles.overlay}
-        ariaHideApp={false}
+        open={isOpen}
+        onClose={onRequestClose}
+        center
+        classNames={{ modal: styles.modal, overlay: styles.overlay }}
+        closeIcon={null}
+        aria-labelledby="success-modal-title"
     >
         <div className={styles.content}>
             <img src={IMAGE.LOGO_HOT_CRED.src} alt="Logo HotCred" className={styles.logo} />

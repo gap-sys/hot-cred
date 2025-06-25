@@ -1,4 +1,5 @@
-import Modal from 'react-modal';
+import { Modal } from 'react-responsive-modal';
+import 'react-responsive-modal/styles.css';
 import { FaExclamationTriangle } from 'react-icons/fa';
 
 import styles from './error-modal.module.scss';
@@ -15,19 +16,20 @@ export const ErrorModal: React.FC<ErrorModalProps> = ({
     errors
 }) => (
     <Modal
-        isOpen={isOpen}
-        onRequestClose={onRequestClose}
-        className={styles.modal}
-        overlayClassName={styles.overlay}
-        ariaHideApp={false}
+        open={isOpen}
+        onClose={onRequestClose}
+        center
+        classNames={{ modal: styles.modal, overlay: styles.overlay }}
+        closeIcon={null}
+        aria-labelledby="error-modal-title"
     >
         <div className={styles.content}>
             <div className={styles.iconContainer}>
                 <FaExclamationTriangle className={styles.icon} />
             </div>
-            
+
             <h3 className={styles.title}>Ops! Encontramos alguns problemas</h3>
-            
+
             <div className={styles.errorList}>
                 {errors.map((error, index) => (
                     <div key={index} className={styles.errorItem}>
@@ -36,8 +38,8 @@ export const ErrorModal: React.FC<ErrorModalProps> = ({
                     </div>
                 ))}
             </div>
-            
-            <button 
+
+            <button
                 className={styles.button}
                 onClick={onRequestClose}
             >
