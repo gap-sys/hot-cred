@@ -18,9 +18,9 @@ const Header = () => {
     <>
       <header className={S.nubankHeader}>
         <div className={S.leftSection}>
-          <span className={S.brand}>Nubank</span>
+          <span className={S.brand}>HotCred</span>
           <h1 className={S.title}>
-            N possibilidades para uma<br />vida mais simples e segura
+            Transforme seu agora.<br />Simplifique seu amanhã.
           </h1>
           <form className={S.cpfForm} onSubmit={handleSubmit}>
             <label className={S.formLabel}>Simule agora: de quanto você precisa?</label>
