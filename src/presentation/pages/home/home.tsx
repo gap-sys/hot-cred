@@ -1,5 +1,7 @@
-import { Meta, Navbar, Header, Footer, StepsOpen, Card, FAQ, Service, Benefits, Mission } from 'src/presentation/components'
-import { IMAGE } from 'src/presentation/assets'
+import { Meta, Navbar, Header, Footer, FAQ, Contact, FgtsSimulation, Path, Benefits, Banks } from 'src/presentation/components'
+import { ICON, IMAGE } from 'src/presentation/assets'
+
+import S from './home.module.scss'
 
 const Home = () => {
   const IMAGES = IMAGE.HEADER_IMAGE
@@ -14,24 +16,22 @@ const Home = () => {
       />
 
       <Navbar />
-      <Header
-        title={
-          <>
-            Não é só um banco<br />
-            É o futuro, do seu jeito<br />
-            É <span style={{ color: "#EF5635" }}>Hot</span><span style={{ color: "#16487E", fontStyle: "italic" }}>Invest</span>
-          </>
-        }
-        image={IMAGES.src}
-      />
-
-      <StepsOpen />
-      <Card />
+      
       <Benefits />
-      <Mission />
-      <Service />
+      <Path />
+      <Banks />
+      <FgtsSimulation />
       <FAQ />
+      <Contact />
       <Footer />
+      <a
+        href="https://api.whatsapp.com/send?phone=5519993120568&text=Ol%C3%A1!%20Vim%20do%20site%20da%20HotCred!"
+        target="_blank"
+        rel="noopener noreferrer"
+        className={S['whatsapp-button']}
+      >
+        <ICON.IconBrandWhatsapp className={S.icon} />
+      </a>
     </div>
   )
 }

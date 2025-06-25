@@ -5,3 +5,4 @@ export { default as CorruptionPolicy } from './corruption-policy/corruption-poli
 export { default as KycPolicy } from './kyc-policy/kyc-policy'
 export { default as EthicsCode } from './ethics-code/ethics-code'
 export { default as SocialResponsibilityProgram } from './social-responsibility-program/social-responsibility-program'
+export { default as Submission } from './submission/submission'

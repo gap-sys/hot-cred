@@ -1,53 +1,57 @@
 import {
-    IconDeviceMobile,
-    IconCurrencyDollar,
-    IconTrendingUp,
-    IconCheck,
-    IconMoodSmile,
-    IconUsers
+    IconUserDollar,
+    IconBuildingBank,
+    IconBriefcase,
+    IconUsers,
+    IconIdBadge2,
+    IconCreditCard
 } from "@tabler/icons-react";
 
 import styles from "./benefits.module.scss";
 
 const BENEFITS = [
     {
-        icon: <IconDeviceMobile size={36} stroke={1.7} />,
-        title: "Tudo no seu celular",
-        desc: "Gerencie sua conta e investimentos de forma simples e rápida, direto pelo app, onde estiver.",
+        icon: <IconIdBadge2 size={36} stroke={1.7} />,
+        title: "Crédito do Trabalhador",
+        desc: "Linha de crédito exclusiva para trabalhadores formais, com condições especiais e aprovação facilitada.",
     },
     {
-        icon: <IconCurrencyDollar size={36} stroke={1.7} />,
-        title: "Transferências gratuitas",
-        desc: "Envie e receba dinheiro sem pagar taxas, com liberdade total para movimentar sua conta.",
+        icon: <IconUserDollar size={36} stroke={1.7} />,
+        title: "Empréstimo Pessoal",
+        desc: "Dinheiro rápido e sem burocracia para você realizar seus planos, com contratação 100% digital.",
     },
     {
-        icon: <IconTrendingUp size={36} stroke={1.7} />,
-        title: "Seu dinheiro rende mais",
-        desc: "Deixe seu saldo render automaticamente acima da poupança, sem esforço e sem burocracia.",
+        icon: <IconBuildingBank size={36} stroke={1.7} />,
+        title: "Empréstimo FGTS",
+        desc: "Antecipe seu saque-aniversário do FGTS e tenha acesso ao valor na hora, com taxas reduzidas.",
     },
     {
-        icon: <IconCheck size={36} stroke={1.7} />,
-        title: "Organização inteligente",
-        desc: "Pague contas, acompanhe boletos e receba alertas de vencimento, tudo em um só lugar.",
+        icon: <IconBriefcase size={36} stroke={1.7} />,
+        title: "Empréstimo Consignado",
+        desc: "Crédito com parcelas descontadas direto na folha, ideal para aposentados, pensionistas e servidores.",
     },
-    {
-        icon: <IconMoodSmile size={36} stroke={1.7} />,
-        title: "Sem mensalidade",
-        desc: "Conta 100% gratuita, sem tarifas de manutenção ou surpresas no final do mês.",
-    },
+
     {
         icon: <IconUsers size={36} stroke={1.7} />,
-        title: "Acesso facilitado",
-        desc: "Abra sua conta HotInvest sem burocracia, sem análise de crédito e para todos os perfis.",
+        title: "Consignado Público",
+        desc: "Empréstimo consignado para servidores públicos, com taxas diferenciadas e prazos flexíveis.",
+    },
+    {
+        icon: <IconCreditCard size={36} stroke={1.7} />,
+        title: "Cartão de Crédito Consignado",
+        desc: "Cartão sem consulta ao SPC/Serasa, com limite vinculado ao benefício e descontos em folha.",
     },
 ];
 
 const Benefits = () => {
     return (
-        <section id="beneficios" className={styles.section}>
+        <section id="emprestimos" className={styles.section}>
             <h2 className={styles.title}>
-                Tudo o que você precisa, com a conta da <span style={{ color: "#EF5635" }}>Hot</span><span style={{ color: "#16487E", fontStyle: "italic" }}>Invest</span>.
+                Encontre a solução ideal para sua vida financeira
             </h2>
+            <p className={styles.subtitle}>
+                Descubra as melhores opções de crédito e conquiste seus objetivos com praticidade.
+            </p>
             <div className={styles.grid}>
                 {BENEFITS.map((b, i) => (
                     <div className={styles.card} key={i}>

@@ -8,24 +8,24 @@ import styles from "./faq.module.scss";
 
 const QUESTIONS = [
     {
-        question: "É seguro usar um banco digital?",
-        answer: `Sim! Bancos digitais seguem as mesmas normas de segurança dos bancos tradicionais, com proteção de dados, criptografia e fiscalização do Banco Central. Além disso, você pode acompanhar todas as movimentações em tempo real pelo app.`,
+        question: "Como funciona a análise de crédito na HotCred?",
+        answer: `A análise de crédito é feita de forma rápida e digital, considerando seu histórico financeiro, renda e informações cadastrais. Você recebe a resposta em poucos minutos e pode acompanhar todo o processo pelo app ou site.`,
     },
     {
-        question: "Como funciona o atendimento em um banco digital?",
-        answer: `O atendimento é 100% online, disponível pelo aplicativo, chat, e-mail ou telefone. Você resolve tudo sem precisar ir até uma agência física, com suporte rápido e eficiente.`,
+        question: "Quais são as vantagens de contratar um empréstimo digital?",
+        answer: `Com a HotCred, você solicita, simula e contrata seu empréstimo sem sair de casa, com taxas competitivas, transparência total e sem burocracia. O dinheiro cai direto na sua conta após a aprovação.`,
     },
     {
-        question: "Posso receber meu salário e pagar contas normalmente?",
-        answer: `Sim! Você pode receber salário, transferir, pagar contas, boletos, fazer PIX e até investir, tudo pelo app. O banco digital oferece as mesmas funcionalidades essenciais de um banco tradicional.`,
+        question: "É seguro compartilhar meus dados com a HotCred?",
+        answer: `Sim! Utilizamos tecnologia de ponta para proteger seus dados, com criptografia e protocolos de segurança exigidos pelo Banco Central. Suas informações são tratadas com total confidencialidade.`,
     },
     {
-        question: "E se eu precisar sacar dinheiro?",
-        answer: `Você pode sacar dinheiro em caixas eletrônicos da rede Banco24Horas em todo o Brasil, usando seu cartão do banco digital.`,
+        question: "Posso antecipar parcelas ou quitar meu empréstimo antes do prazo?",
+        answer: `Sim, você pode antecipar pagamentos ou quitar seu contrato a qualquer momento, com desconto proporcional dos juros. Tudo pode ser feito pelo app ou entrando em contato com nosso atendimento.`,
     },
     {
-        question: "O que acontece se eu tiver algum problema com o app?",
-        answer: `O suporte está sempre disponível para te ajudar. Além disso, o app é atualizado frequentemente para garantir segurança e estabilidade. Se precisar, você pode bloquear o cartão, redefinir senha e resolver tudo pelo celular.`,
+        question: "Como posso falar com a HotCred em caso de dúvida ou problema?",
+        answer: `Nosso atendimento é digital e humanizado: você pode nos acionar pelo chat, WhatsApp, telefone ou e-mail. Estamos prontos para te ajudar em todas as etapas, desde a simulação até o pós-venda.`,
     },
 ];
 
@@ -34,13 +34,6 @@ export default function FAQ() {
 
     return (
         <section id="perguntas-frequentes" className={styles.faqSection}>
-            <div className={styles.left}>
-                <h2 className={styles.title}>Ficou com alguma dúvida?</h2>
-                <p className={styles.subtitle}>
-                    Encontre respostas para suas principais dúvidas sobre produtos e serviços do banco digital.
-                </p>
-                <button className={styles.button}>Confira perguntas frequentes</button>
-            </div>
             <div className={styles.right}>
                 {QUESTIONS.map((q, i) => (
                     <div
@@ -68,6 +61,12 @@ export default function FAQ() {
                         </div>
                     </div>
                 ))}
+            </div>
+            <div className={styles.left}>
+                <h2 className={styles.title}>Ficou com alguma dúvida?</h2>
+                <p className={styles.subtitle}>
+                    Estamos aqui para esclarecer suas dúvidas e ajudar você a escolher as melhores soluções financeiras.
+                </p>
             </div>
         </section>
     );

@@ -40,7 +40,7 @@ const Navbar = () => {
         <section className={S['left-section']}>
           <Link href="/" legacyBehavior>
             <a>
-              <Image src={IMAGE.LOGO_HOT_INVEST} alt="Logo América Financeira" className={S.logo} />
+              <Image src={IMAGE.LOGO_HOT_CRED} alt="Logo HotCred" className={S.logo} />
             </a>
           </Link>
           {isSideMenuOpen && <NavMobile closeMenu={() => setSideMenu(false)} />}
@@ -84,9 +84,9 @@ const Navbar = () => {
         </section>
 
         <aside className={S['right-section']}>
-          <Link href="/abrir-conta" legacyBehavior>
+          <Link href="/formulario-seja-parceiro" legacyBehavior>
             <a className={S.link}>
-              <span>Quero ser HotInvest</span>
+              <span>Quero ser parceiro</span>
             </a>
           </Link>
         </aside>

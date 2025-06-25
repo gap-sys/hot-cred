@@ -1,0 +1,132 @@
+@import '../../../styles/themes/light.scss';
+@import '../../../styles/themes/mixins.scss';
+
+.container {
+  background-color: #E2EDF7;
+  padding: 1rem 0;
+
+  .box-container {
+    @include container(1280px, 5rem auto 5rem auto);
+    padding: 0 2rem;
+
+    @media (max-width: 880px) {
+      @include container(1280px, 3em auto 3rem auto);
+    }
+
+    .title {
+      font-size: $font-large;
+      font-weight: $weight-default;
+      line-height: 2.9rem;
+      margin-bottom: 1rem;
+
+      @media (max-width: 880px) {
+        font-size: $font-medium;
+        line-height: 2rem;
+        margin-bottom: 1rem;
+      }
+    }
+
+    .subtitle {
+      font-size: $font-small;
+      font-weight: $weight-medium;
+      line-height: 1.3rem;
+    }
+
+    .form-container {
+      @include display-flex(flex-start, space-between);
+
+      @media (max-width: 1024px) {
+        flex-direction: column;
+      }
+
+      .form-section {
+        width: 115%;
+
+        .balance-section {
+          margin-top: 1rem;
+          padding-right: 2rem;
+
+          .title-form {
+            font-size: $font-default;
+            font-weight: $weight-medium;
+            line-height: 1.5rem;
+          }
+
+          .input-placeholder {
+            background-color: inherit;
+            font-size: $font-large;
+            font-weight: $weight-medium;
+            margin-bottom: 0.2rem;
+
+
+            @media (max-width: 880px) {
+              font-size: $font-large;
+              display: block;
+            }
+          }
+
+          .btn {
+            @include hover;
+            background-color: $color-primary;
+            color: $color-snow;
+            font-size: $font-default;
+            border-radius: 50%;
+            padding: 0.4rem 1rem;
+            margin: 0 0.2rem;
+
+            @media (max-width: 880px) {
+              padding: 0.3rem 0.9rem;
+            }
+
+            &:hover {
+              background-color: $color-secondary;
+              color: $color-darkHigh;
+            }
+          }
+        }
+      }
+
+      .result-section {
+        width: 80%;
+
+        @media (max-width: 880px) {
+          margin-top: 2.5rem;
+        }
+
+        .title-form {
+          font-size: $font-default;
+          font-weight: $weight-medium;
+          line-height: 1.5rem;
+        }
+
+        .result {
+          border-bottom: 0.185rem solid $color-secondary;
+          font-size: $font-large;
+          font-weight: $weight-medium;
+        }
+
+        .paragraph {
+          font-size: $font-small;
+          font-weight: $weight-medium;
+          line-height: 1.2rem;
+          margin: 1.1rem 0;
+
+          @media (max-width: 880px) {
+            font-size: $font-small;
+            line-height: 1.2rem;
+            margin-bottom: 1rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+.btn-group {
+  display: flex;
+  flex-direction: row;
+  gap: 0.6rem;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0.5rem 0 1.2rem 0;
+}

@@ -1,13 +1,15 @@
 "use client";
 
-
 import Link from 'next/link';
+import Image from 'next/image';
 
-import { FaLinkedinIn, FaYoutube, FaFacebookF, FaInstagram } from "react-icons/fa";
+import { IMAGE } from 'src/presentation/assets';
+import { FaInstagram, FaWhatsapp } from "react-icons/fa";
 
 import styles from "./footer.module.scss";
 
 export default function Footer() {
+  const pathname = typeof window !== 'undefined' ? window.location.pathname : '';
   const handleSmoothScroll = (id: string) => (e: React.MouseEvent) => {
     e.preventDefault();
     const el = document.getElementById(id);
@@ -16,46 +18,33 @@ export default function Footer() {
     }
   };
 
+  const navLinks = [
+    { label: 'Empréstimos', anchor: 'emprestimos' },
+    { label: 'Perguntas frequentes', anchor: 'perguntas-frequentes' },
+    { label: 'Contato', anchor: 'contato' },
+  ];
+
   return (
     <footer className={styles.footer}>
       <div className={styles.columns}>
-
         <div className={styles.column}>
-          <h4>Ouvidoria</h4>
-          <ul>
-            <li>Atendimento em dias úteis das 8h às 18h (horário de Brasília)</li>
-            <li><strong>0800 000 0120</strong></li>
-            <li>ouvidoria@hotinvest.com.br</li>
-          </ul>
-          <h5>Redes Sociais</h5>
+          <Image className={styles.logo} src={IMAGE.LOGO_HOT_CRED} alt="Logo HotCred" width={160} height={60} style={{ marginBottom: 16 }} />
+          <h4>Redes Sociais</h4>
           <div className={styles.social}>
-            <FaLinkedinIn className={styles.icon} />
-            <FaYoutube className={styles.icon} />
-            <FaFacebookF className={styles.icon} />
-            <FaInstagram className={styles.icon} />
+            <a href="https://api.whatsapp.com/send?phone=5519993120568&text=Ol%C3%A1!%20Vim%20do%20site%20da%20HotCred!" target="_blank" rel="noopener noreferrer">
+              <FaWhatsapp className={styles.icon} />
+            </a>
+            <a href="https://www.instagram.com/hotcredoficial/" target="_blank" rel="noopener noreferrer">
+              <FaInstagram className={styles.icon} />
+            </a>
           </div>
         </div>
-
-        <div className={styles.column}>
-          <h4>Privacidade e proteção de dados</h4>
-          <ul>
-            <li>dpo@hotinvest.com.br</li>
-            <li>Procedimentos de Ouvidoria</li>
-          </ul>
-          <h5>Explorar</h5>
-          <ul>
-            <li>
-              <a href="#atendimento" onClick={handleSmoothScroll("atendimento")}>Central de Ajuda</a>
-            </li>
-          </ul>
-        </div>
-
         <div className={styles.column}>
           <h4>Fale com a gente</h4>
           <ul>
             <li>
               Capitais e regiões metropolitanas<br />
-              <strong>(19) 3483-4454</strong>
+              <strong>+55 19 99312-0568</strong>
             </li>
             <li>
               Demais localidades<br />
@@ -69,7 +58,6 @@ export default function Footer() {
             </li>
           </ul>
         </div>
-
         <div className={styles.column}>
           <h4>Transparência</h4>
           <ul>
@@ -80,17 +68,23 @@ export default function Footer() {
             <li><Link href="/codigo-de-etica">Código de Ética</Link></li>
           </ul>
         </div>
+        <div className={styles.column}>
+          <h4>Navegue</h4>
+          <ul className={styles.navFooter}>
+            {navLinks.map(link => (
+              <li key={link.anchor}>
+                <a href={`#${link.anchor}`} onClick={handleSmoothScroll(link.anchor)}>{link.label}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-
       <div className={styles.bottom}>
-        <div className={styles.logo}>
-          <span style={{ color: "#EF5635" }}>Hot</span><span style={{ color: "#fff", fontStyle: "italic" }}>Invest</span>
-        </div>
         <div className={styles.copyright}>
-          © 2025 HotInvest S.A - Instituição de Pagamento. 54.139.158/0001-76. Centro, São Pedro, SP - 13520-000
-        </div>
-        <div className={styles.accessibility}>
-          <span role="img" aria-label="acessibilidade">🦽</span>
+          A HotCred é uma consultoria financeira independente, comprometida em oferecer soluções seguras, transparentes e personalizadas para quem busca organizar, planejar ou expandir sua vida financeira. Atuamos de forma 100% online, proporcionando agilidade no atendimento, clareza nas informações e suporte especializado em todas as etapas do processo.
+          Não somos instituição financeira, nem operamos como correspondente bancário. Nosso papel é orientar e conectar nossos clientes às melhores oportunidades disponíveis no mercado, sempre de forma ética, imparcial e responsável.
+          Importante: não realizamos cobranças antecipadas e não contamos com representantes externos. Todos os atendimentos e negociações devem ser feitos exclusivamente pelos nossos canais oficiais.
+          As condições e soluções apresentadas podem variar conforme análise individual, perfil de crédito e disponibilidade das instituições parceiras. Consulte sempre todas as informações com atenção antes de qualquer contratação.
         </div>
       </div>
     </footer>

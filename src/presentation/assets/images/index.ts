@@ -1,31 +1,27 @@
-import LOGO_HOT_INVEST from './LOGO_HOT_INVEST.jpg'
-import CARTAO from './CARTAO.webp'
-import EQUIPE_REUNIDA from './EQUIPE_REUNIDA.webp'
-import CELULAR_CARTAO from './CELULAR_CARTAO.webp'
-import CONFIANCA from './CONFIANCA.jpg'
-import DESTINO from './DESTINO.jpg'
-import FE from './FE.jpg'
-import INOVACAO from './INOVACAO.jpg'
-import MERITOCRACIA from './MERITOCRACIA.jpg'
-import SIMPLICIDADE from './SIMPLICIDADE.jpg'
-import VISAO from './VISAO.jpg'
-import MISSAO from './MISSAO.jpg'
+import LOGO_HOT_CRED from './LOGO_HOTCRED.png'
 import HEADER_IMAGE from './HEADER_IMAGE.jpg'
+import BANCO_CAIXA from './BANCO_CAIXA.webp'
+import BANCO_SANTANDER from './BANCO_SANTANDER.webp'
+import BANCO_SAFRA from './BANCO_SAFRA.webp'
+import BANCO_BANRISUL from './BANCO_BANRISUL.webp'
+import BANCO_BRASIL from './BANCO_BRASIL.webp'
+import BANCO_BRADESCO from './BANCO_BRADESCO.webp'
+import BANCO_ITAU from './BANCO_ITAU.webp'
+import BANCO_PAN from './BANCO_PAN.webp'
+import BANCO_C6 from './BANCO_C6.webp'
 
 const IMAGE = {
+  LOGO_HOT_CRED,
   HEADER_IMAGE,
-  LOGO_HOT_INVEST,
-  CARTAO,
-  EQUIPE_REUNIDA,
-  CELULAR_CARTAO,
-  CONFIANCA,
-  DESTINO,
-  FE,
-  INOVACAO,
-  MERITOCRACIA,
-  SIMPLICIDADE,
-  VISAO,
-  MISSAO,
+  BANCO_CAIXA,
+  BANCO_SANTANDER,
+  BANCO_SAFRA,
+  BANCO_BANRISUL,
+  BANCO_BRASIL,
+  BANCO_BRADESCO,
+  BANCO_ITAU,
+  BANCO_PAN,
+  BANCO_C6,
 }
 
 export default IMAGE

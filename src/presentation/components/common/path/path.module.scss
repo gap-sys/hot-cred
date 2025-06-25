@@ -1,0 +1,182 @@
+@import '../../../styles/themes/light.scss';
+@import '../../../styles/themes/mixins.scss';
+
+.pathSection {
+    @include container(1380px);
+    width: 100%;
+    background: #fff;
+    padding: 48px 1rem 48px 1rem;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 400;
+    margin-bottom: 36px;
+    text-align: left;
+    margin-left: 4vw;
+}
+
+.bold {
+    font-weight: 700;
+    font-size: 2rem;
+    color: $color-primary;
+}
+
+.stepsWrapper {
+    position: relative;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2vw;
+}
+
+.line {
+    position: absolute;
+    top: 38px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #e6e6e6;
+    z-index: 1;
+}
+
+.lineProgress {
+    position: absolute;
+    top: 38px;
+    left: 0;
+    height: 2px;
+    background: $color-secondary;
+    z-index: 2;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 2px;
+    pointer-events: none;
+}
+
+.steps {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 0;
+    position: relative;
+    z-index: 2;
+}
+
+.step {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 180px;
+    max-width: 320px;
+    position: relative;
+}
+
+.circle {
+    width: 48px;
+    height: 48px;
+    background: #E2EDF7;
+    color: #0a2a32;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 18px;
+    margin-top: 0;
+    box-shadow: 0 2px 8px rgba(44, 62, 80, 0.04);
+    border: 2px solid #e6e6e6;
+    z-index: 2;
+}
+
+.stepText {
+    font-size: 1.1rem;
+    text-align: center;
+    font-weight: 400;
+    margin-bottom: 0;
+    min-height: 48px;
+}
+
+.stepTextFinal {
+    font-size: 1.15rem;
+    color: $color-primary;
+    text-align: left;
+    font-weight: 500;
+    margin-left: 12px;
+    min-width: 220px;
+    margin-top: 8px;
+}
+
+@media (max-width: 1100px) {
+    .title {
+        font-size: 2rem;
+        margin-left: 2vw;
+    }
+
+    .bold {
+        font-size: 2.2rem;
+    }
+
+    .steps {
+        flex-wrap: wrap;
+    }
+
+    .step {
+        min-width: 140px;
+        max-width: 220px;
+    }
+
+    .stepTextFinal {
+        min-width: 120px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 700px) {
+    .pathSection {
+        padding: 24px 1rem 16px 1rem;
+    }
+
+    .title {
+        font-size: 1.2rem;
+        margin-left: 2vw;
+    }
+
+    .bold {
+        font-size: 1.3rem;
+    }
+
+    .steps {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+    }
+
+    .line {
+        display: none;
+    }
+
+    .lineProgress {
+        display: none;
+    }
+
+    .step {
+        flex-direction: row;
+        align-items: center;
+        min-width: 0;
+        max-width: 100vw;
+        margin-bottom: 0;
+    }
+
+    .circle {
+        margin-bottom: 0;
+        margin-right: 12px;
+    }
+
+    .stepText,
+    .stepTextFinal {
+        min-width: 0;
+        margin-left: 0;
+        text-align: left;
+    }
+}
