@@ -18,6 +18,7 @@ export default function Footer() {
   };
 
   const navLinks = [
+    { label: 'Simular agora', anchor: 'simular' },
     { label: 'Empréstimos', anchor: 'emprestimos' },
     { label: 'Perguntas frequentes', anchor: 'perguntas-frequentes' },
     { label: 'Contato', anchor: 'contato' },

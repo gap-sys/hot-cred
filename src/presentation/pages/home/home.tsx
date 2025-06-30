@@ -1,4 +1,4 @@
-import { Meta, Navbar, Header, Footer, FAQ, Contact, FgtsSimulation, Path, Benefits, Banks } from 'src/presentation/components'
+import { Meta, Navbar, Header, Footer, FAQ, Contact, FgtsSimulation, Path, Benefits, Banks, Numbers } from 'src/presentation/components'
 import { ICON, IMAGE } from 'src/presentation/assets'
 
 import S from './home.module.scss'
@@ -16,10 +16,11 @@ const Home = () => {
       />
       <Navbar />
       <Header />
+      <Numbers />
       <Benefits />
       <Path />
-      <Banks />
       <FgtsSimulation />
+      <Banks />
       <FAQ />
       <Contact />
       <Footer />

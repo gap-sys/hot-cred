@@ -2,7 +2,7 @@
 @import '../../../styles/themes/mixins.scss';
 
 .container {
-  background-color: #E2EDF7;
+  background-color: #F7F7F7;
   padding: 1rem 0;
 
   .box-container {
@@ -57,7 +57,7 @@
             font-size: $font-large;
             font-weight: $weight-medium;
             margin-bottom: 0.2rem;
-
+            border-bottom: 0.185rem solid #EF5635;
 
             @media (max-width: 880px) {
               font-size: $font-large;
@@ -79,7 +79,7 @@
             }
 
             &:hover {
-              background-color: $color-secondary;
+              background-color: #c9462b;
               color: $color-darkHigh;
             }
           }
@@ -100,7 +100,7 @@
         }
 
         .result {
-          border-bottom: 0.185rem solid $color-secondary;
+          border-bottom: 0.185rem solid #EF5635;
           font-size: $font-large;
           font-weight: $weight-medium;
         }

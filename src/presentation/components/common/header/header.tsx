@@ -7,58 +7,74 @@ import { IMAGE } from 'src/presentation/assets'
 const Header = () => {
   const [valor, setValor] = useState('')
 
+  const formatCurrency = (value: string) => {
+    const numbers = value.replace(/\D/g, '')
+
+    if (numbers === '') return ''
+
+    const number = parseInt(numbers, 10)
+    return `R$${number.toLocaleString('pt-BR')}`
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!valor) return
-    const msg = encodeURIComponent(`Olá! Gostaria de simular um crédito no valor de R$ ${valor}`)
-    window.open(`https://api.whatsapp.com/send?phone=SEUNUMEROAQUI&text=${msg}`, '_blank')
+    console.log('Form submitted, valor:', valor)
+
+    if (!valor || valor.trim() === '') {
+      return
+    }
+
+    const msg = encodeURIComponent(`Olá! Gostaria de simular um crédito no valor de ${valor}`)
+    console.log('Abrindo WhatsApp com mensagem:', msg)
+    window.open(`https://api.whatsapp.com/send?phone=5519993120568&text=${msg}`, '_blank')
+  }
+
+  const handleButtonClick = () => {
+    console.log('Botão clicado, valor atual:', valor)
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value
+    const formattedValue = formatCurrency(newValue)
+    setValor(formattedValue)
   }
 
   return (
     <>
-      <header className={S.nubankHeader}>
+      <header id='simular' className={S.header}>
         <div className={S.leftSection}>
           <span className={S.brand}>HotCred</span>
           <h1 className={S.title}>
-            Transforme seu agora.<br />Simplifique seu amanhã.
+            Milhares de soluções  para uma vida mais simples e segura
           </h1>
           <form className={S.cpfForm} onSubmit={handleSubmit}>
             <label className={S.formLabel}>Simule agora: de quanto você precisa?</label>
             <input
               className={S.cpfInput}
               type="text"
-              placeholder="Digite o valor desejado"
+              placeholder="R$ 0"
               value={valor}
-              onChange={e => setValor(e.target.value)}
-              maxLength={12}
+              onChange={handleInputChange}
+              maxLength={20}
             />
-            <button className={S.cpfButton} type="submit">Quero meu crédito</button>
+            <button
+              className={S.cpfButton}
+              type="submit"
+              onClick={handleButtonClick}
+            >
+              Quero meu crédito
+            </button>
           </form>
         </div>
         <div className={S.rightSection}>
           <img
             src={IMAGE.EQUIPE_REUNIDA.src}
-            alt="Casal feliz Nubank"
+            alt="Equipe HotCred"
             className={S.heroImage}
           />
         </div>
       </header>
-      <section className={S.statsSection}>
-        <div className={S.statsGrid}>
-          <div className={S.statCard}>
-            <div className={S.statNumber}>119 mi</div>
-            <div className={S.statText}>de clientes no Brasil, México e Colômbia.</div>
-          </div>
-          <div className={S.statCard}>
-            <div className={S.statNumber}>US$ 11 bi</div>
-            <div className={S.statText}>em tarifas economizadas por nossos clientes em 2023.</div>
-          </div>
-          <div className={S.statCard}>
-            <div className={S.statNumber}>440 mi</div>
-            <div className={S.statText}>de horas economizadas por nossos clientes em filas e aguardando atendimento, em sete anos.</div>
-          </div>
-        </div>
-      </section>
+
     </>
   )
 }

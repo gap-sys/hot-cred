@@ -1,0 +1,200 @@
+@import '../../../styles/themes/light.scss';
+@import '../../../styles/themes/mixins.scss';
+
+.statsSection {
+    background: #F6F6F6;
+    width: 100vw;
+    padding: 6rem 0 6rem 0;
+    display: flex;
+    justify-content: center;
+
+    @media (max-width: 1200px) {
+        padding: 5rem 0 5rem 0;
+    }
+
+    @media (max-width: 900px) {
+        padding: 4rem 0 4rem 0;
+    }
+
+    @media (max-width: 600px) {
+        padding: 1rem 0 3rem 0;
+    }
+}
+
+.statsGrid {
+    display: flex;
+    gap: 3.5rem;
+    width: 100%;
+    max-width: 1280px;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 0 2rem;
+
+    @media (max-width: 1200px) {
+        gap: 2.5rem;
+        padding: 0 1.5rem;
+    }
+
+    @media (max-width: 900px) {
+        flex-direction: column;
+        gap: 2rem;
+        margin-top: 2rem;
+        align-items: center;
+        padding: 0 1rem;
+    }
+
+    @media (max-width: 600px) {
+        gap: 1.5rem;
+        margin-top: 1rem;
+    }
+}
+
+.statCard {
+    background: #fff;
+    border-radius: 2rem;
+    box-shadow: 0 2px 16px rgba(130, 10, 209, 0.06);
+    padding: 2.7rem 2rem 2.2rem 2rem;
+    min-width: 320px;
+    width: 410px;
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    position: sticky;
+    top: 2rem;
+    z-index: 10;
+
+    @media (max-width: 1200px) {
+        min-width: 280px;
+        width: 350px;
+        padding: 2.2rem 2rem 1.8rem 2rem;
+        min-height: 260px;
+    }
+
+    @media (max-width: 900px) {
+        min-width: 0;
+        width: 100%;
+        align-items: center;
+        padding: 2rem 1.5rem 1.5rem 1.5rem;
+        position: relative;
+        top: auto;
+        min-height: auto;
+    }
+
+    @media (max-width: 600px) {
+        width: 95vw;
+        padding: 1.8rem 1.2rem 1.3rem 1.2rem;
+        border-radius: 1.5rem;
+    }
+}
+
+.statNumber {
+    color: $color-primary;
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin-bottom: 1.1rem;
+    line-height: 1.1;
+
+    @media (max-width: 1200px) {
+        font-size: 2.2rem;
+        margin-bottom: 1rem;
+    }
+
+    @media (max-width: 900px) {
+        font-size: 2rem;
+        margin-bottom: 0.8rem;
+    }
+
+    @media (max-width: 600px) {
+        font-size: 1.8rem;
+        margin-bottom: 0.7rem;
+    }
+}
+
+.statText {
+    color: #111;
+    font-size: 1.15rem;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: left;
+
+    @media (max-width: 1200px) {
+        font-size: 1.1rem;
+        line-height: 1.4;
+    }
+
+    @media (max-width: 900px) {
+        font-size: 1rem;
+        text-align: center;
+        line-height: 1.5;
+    }
+
+    @media (max-width: 600px) {
+        font-size: 0.95rem;
+        line-height: 1.4;
+    }
+}
+
+// Escada - Ajustada para diferentes breakpoints
+.statsGrid .statCard:nth-child(2) {
+    margin-top: 13rem;
+
+    @media (max-width: 1200px) {
+        margin-top: 10rem;
+    }
+
+    @media (max-width: 900px) {
+        margin-top: 0;
+    }
+}
+
+.statsGrid .statCard:nth-child(3) {
+    margin-top: 26rem;
+
+    @media (max-width: 1200px) {
+        margin-top: 20rem;
+    }
+
+    @media (max-width: 900px) {
+        margin-top: 0;
+    }
+}
+
+// Breakpoint específico para tablets em modo paisagem
+@media (min-width: 901px) and (max-width: 1200px) {
+    .statsGrid {
+        justify-content: center;
+    }
+
+    .statCard {
+        flex: 1;
+        max-width: 350px;
+    }
+}
+
+// Breakpoint para telas muito pequenas
+@media (max-width: 480px) {
+    .statsSection {
+        padding: 2.5rem 0 2.5rem 0;
+    }
+
+    .statsGrid {
+        padding: 0 0.5rem;
+        gap: 1rem;
+    }
+
+    .statCard {
+        width: 100%;
+        padding: 1.5rem 1rem 1rem 1rem;
+        border-radius: 1.2rem;
+    }
+
+    .statNumber {
+        font-size: 1.6rem;
+    }
+
+    .statText {
+        font-size: 0.9rem;
+    }
+}
