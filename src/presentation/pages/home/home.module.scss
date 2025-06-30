@@ -3,6 +3,7 @@
 
 .whatsapp-button {
     @include display-flex;
+    overflow-x: hidden !important;
     background-color: $color-success;
     box-shadow: rgba(0, 0, 0, 0.15) 0 0.25rem 0.75rem;
     transition: transform 0.3s;
