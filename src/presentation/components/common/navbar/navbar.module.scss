@@ -23,38 +23,40 @@
 .left-section {
   @include display-flex(center, flex-start);
   gap: 1rem;
-  
+
   .logo {
     width: 150px;
     height: 40px;
   }
-  
+
   .nav-items {
     display: none;
-   
+
     @media (min-width: 1024px) {
       @include display-flex(center, center);
-      
+
       .nav-link {
         @include hover;
         position: relative;
         padding: 1rem 0.7rem;
-        
+
         .link-text {
           @include display-flex(center, center);
           color: $color-darkHigh;
           font-size: 1rem;
           gap: 0.4rem;
           transition: color 0.1s ease;
+
           &:hover {
             color: $color-primary;
           }
+
           .rotate-180 {
             @include hover(all 0.3s ease);
             transform: rotate(180deg);
           }
         }
-        
+
         .dropdown {
           display: none;
           flex-direction: column;
@@ -84,19 +86,20 @@
   background-color: $color-primary;
   font-weight: 500;
   color: $color-snow;
+
   .link {
     color: inherit;
   }
-  
+
   @media (max-width: 1124px) {
     display: none;
   }
-  
+
   &:hover {
     background-color: $color-primaryHover;
   }
-  
-  
+
+
   @media (min-width: 1024px) {
     display: flex;
   }
@@ -106,7 +109,7 @@
   @include hover;
   display: block;
   font-size: $font-medium;
-  
+
   @media (min-width: 1024px) {
     display: none;
   }
