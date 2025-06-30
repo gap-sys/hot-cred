@@ -4,7 +4,7 @@
 .container {
   background-color: #F7F7F7;
   padding: 1rem 0;
-
+  overflow-x: hidden;
   .box-container {
     @include container(1280px, 5rem auto 5rem auto);
     padding: 0 2rem;
