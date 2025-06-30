@@ -59,9 +59,11 @@
             margin-bottom: 0.2rem;
             border-bottom: 0.185rem solid #EF5635;
 
+
             @media (max-width: 880px) {
               font-size: $font-large;
               display: block;
+              width: 75%;
             }
           }
 
