@@ -3,7 +3,7 @@
 
 .whatsapp-button {
     @include display-flex;
-    overflow-x: hidden !important;
+    overflow: hidden;
     background-color: $color-success;
     box-shadow: rgba(0, 0, 0, 0.15) 0 0.25rem 0.75rem;
     transition: transform 0.3s;
@@ -40,8 +40,8 @@
 
     .icon {
         color: $color-snow;
-        width: 11rem;
-        height: 11rem;
+        width: 2.5rem;
+        height: 2.5rem;
         padding: 0.5rem;
     }
 }
