@@ -5,9 +5,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     min-height: 100vh;
-    background: $color-primary;
-    font-family: 'Poppins', sans-serif;
+    background: #F25836;
+    font-family: sans-serif;
     overflow-x: hidden;
 }
 
@@ -35,14 +36,16 @@
     background: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    padding: 24px 16px;
+    padding: 24px;
     width: 95vw;
     max-width: 1200px;
     margin-bottom: 32px;
     border: 1px solid #eee;
+    box-sizing: border-box;
 
     @media (max-width: 768px) {
-        padding: 16px 12px;
+        padding: 16px;
+        width: 98vw;
     }
 }
 
@@ -84,7 +87,7 @@
 }
 
 .stepDividerActive {
-    background: #000040;
+    background: $color-hotcred-primary;
 }
 
 .stepLabel,
@@ -105,7 +108,7 @@
 }
 
 .activeStepLabel {
-    color: #000040;
+    color: $color-hotcred-primary;
 }
 
 .stepNumber {
@@ -131,8 +134,8 @@
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    border: 1px solid #000040;
-    background: #000040;
+    border: 1px solid $color-hotcred-primary;
+    background: $color-hotcred-primary;
     font-size: 16px;
     font-weight: 400;
     color: #fff;
@@ -147,7 +150,7 @@
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    border: 1px solid #000040;
+    border: 1px solid $color-hotcred-primary;
     margin-right: 8px;
     transition: all 0.2s;
 }
@@ -161,6 +164,8 @@
     gap: 10px;
     margin-bottom: 16px;
     flex-wrap: wrap;
+    width: 100%;
+    box-sizing: border-box;
 
     @media (max-width: 768px) {
         gap: 8px;
@@ -173,6 +178,7 @@
     min-width: 200px;
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
 
     @media (max-width: 768px) {
         flex: 1 1 100%;
@@ -184,6 +190,7 @@
     flex: 1 1 100%;
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
 }
 
 .optional {
@@ -200,25 +207,25 @@
 }
 
 .backBtn {
-    border: 1px solid #000040;
-    color: #000040;
+    border: 1px solid $color-hotcred-primary;
+    color: $color-hotcred-primary;
     font-size: 14px;
     font-weight: 500;
     line-height: 25px;
     padding: 10px 24px;
     border-radius: 6px;
     cursor: pointer;
-    font-family: 'Roboto', sans-serif;
+    font-family: sans-serif;
     transition: all 0.2s ease;
 }
 
 .backBtn:hover {
-    background: #000040;
+    background: $color-hotcred-primary;
     color: #fff;
 }
 
 .nextBtn {
-    background: #000040;
+    background: $color-hotcred-primary;
     color: #fff;
     border: none;
     font-size: 14px;
@@ -227,7 +234,7 @@
     padding: 10px 24px;
     border-radius: 6px;
     cursor: pointer;
-    font-family: 'Roboto', sans-serif;
+    font-family: sans-serif;
     transition: background 0.2s, color 0.2s, opacity 0.2s;
 
     &:disabled {
@@ -241,6 +248,7 @@
 .floatingGroup {
     position: relative;
     width: 100%;
+    box-sizing: border-box;
 
     input {
         width: 100%;
@@ -255,10 +263,11 @@
         outline: none;
         transition: border-color 0.2s;
         padding-right: 38px;
+        box-sizing: border-box;
     }
 
     input:focus {
-        border: 1.5px solid #000040;
+        border: 1.5px solid $color-hotcred-primary;
     }
 
     label {
@@ -284,9 +293,9 @@
         font-size: 12px;
         line-height: 20px;
         font-weight: 400;
-        color: #000040;
+        color: $color-hotcred-primary;
         padding: 0 6px;
-        font-family: 'Poppins', sans-serif;
+        font-family: sans-serif;
     }
 
     input:not(:placeholder-shown)+label {
@@ -298,7 +307,7 @@
         color: rgba(0, 0, 0, 0.38);
         background: #fff;
         padding: 0 6px;
-        font-family: 'Poppins', sans-serif;
+        font-family: sans-serif;
     }
 }
 
@@ -308,7 +317,7 @@
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
-    color: #000040;
+    color: $color-hotcred-primary;
     font-size: 18px;
     z-index: 3;
     display: flex;
@@ -317,7 +326,7 @@
 }
 
 .eyeIcon:focus {
-    color: #000040;
+    color: $color-hotcred-primary;
 }
 
 .whatsappBlockRow {
@@ -356,7 +365,7 @@
 .whatsappInputBox {
     display: flex;
     align-items: center;
-    border: 1.5px solid #000040;
+    border: 1.5px solid $color-hotcred-primary;
     border-radius: 10px;
     background: #fff;
     padding: 0 12px;
@@ -364,10 +373,11 @@
     width: 100%;
     transition: border 0.2s;
     position: relative;
+    box-sizing: border-box;
 }
 
 .whatsappInputBox:focus-within {
-    border-color: #000040;
+    border-color: $color-hotcred-primary;
     box-shadow: 0 0 0 2px #F0F4FD;
 }
 
@@ -389,6 +399,7 @@
     color: #222;
     font-weight: 600;
     letter-spacing: 1px;
+    box-sizing: border-box;
 }
 
 .whatsappInputBoxCompact {
@@ -466,7 +477,7 @@
 
 .spinner {
     animation: spin 1s linear infinite;
-    color: #000040;
+    color: $color-hotcred-primary;
     font-size: 1.1rem;
     vertical-align: middle;
     display: inline-block;
@@ -503,7 +514,7 @@
     margin-bottom: 2px;
     margin-left: 2px;
     font-weight: 400;
-    font-family: 'Poppins', sans-serif;
+    font-family: sans-serif;
 }
 
 .leftIcon {
@@ -556,7 +567,7 @@
 .modalContent {
     h3 {
         margin-bottom: 1rem;
-        color: #000040;
+        color: $color-hotcred-primary;
         font-size: 1.25rem;
         font-weight: 600;
     }
@@ -598,7 +609,7 @@
     flex: 1;
     border: none;
     background: transparent;
-    color: #000040;
+    color: $color-hotcred-primary;
     font-size: 1rem;
     font-weight: 500;
     padding: 0;
@@ -631,7 +642,7 @@
     left: 0;
     width: 50%;
     height: 100%;
-    background: #000040;
+    background: $color-hotcred-primary;
     border-radius: 12px;
     z-index: 1;
     transition: transform 0.3s cubic-bezier(.4, 1.4, .6, 1);
@@ -664,5 +675,102 @@
 
     .step {
         margin-bottom: 12px;
+    }
+}
+
+.typeButton {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: $color-hotcred-primary;
+    color: white;
+
+    &:hover {
+        background: $color-primaryHover;
+    }
+
+    &.inactive {
+        background: transparent;
+        color: $color-hotcred-primary;
+        border: 1px solid $color-hotcred-primary;
+
+        &:hover {
+            background: $color-hotcred-primary;
+            color: white;
+        }
+    }
+}
+
+.stepNumber {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1.5px solid $color-hotcred-primary;
+    color: $color-hotcred-primary;
+    background: white;
+}
+
+.activeStepNumber {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    background: $color-hotcred-primary;
+    color: white;
+    border: 1.5px solid $color-hotcred-primary;
+}
+
+.completedStepNumber {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    background: $color-hotcred-primary;
+    color: white;
+    border: 1.5px solid $color-hotcred-primary;
+}
+
+.submitButton {
+    background: $color-hotcred-primary;
+    color: white;
+    border: none;
+    padding: 16px 32px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    &:hover {
+        background: $color-primaryHover;
+    }
+
+    &:disabled {
+        background: #ccc;
+        cursor: not-allowed;
     }
 }

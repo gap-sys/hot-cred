@@ -68,11 +68,6 @@ export default function Submission() {
 
     return (
         <div className={styles.container}>
-            <div className={styles.header}>
-                <a>
-                    <Image src={IMAGE.LOGO_HOT_CRED} alt="Logo HotCred" className={styles.logo} />
-                </a>
-            </div>
             <div className={styles.formWrapper}>
                 <h2 className={styles.title}>CADASTRO DE CORRESPONDENTE</h2>
 

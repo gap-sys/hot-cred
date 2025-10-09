@@ -1,3 +1,5 @@
+@import '../../../styles/themes/light.scss';
+
 .modal {
     position: absolute;
     top: 50%;
@@ -54,7 +56,7 @@
 }
 
 .button {
-    background: #000040;
+    background: $color-hotcred-primary;
     color: #fff;
     border: none;
     border-radius: 6px;

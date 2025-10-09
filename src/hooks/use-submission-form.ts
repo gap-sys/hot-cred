@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { toast } from 'react-toastify';
-import { useRouter } from 'next/router';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { isValidWhatsapp, isValidEmail } from 'src/utils/validation';
 import { SubmissionForm, SubmissionErrors, RegistrationType } from 'src/@types';
@@ -27,13 +27,13 @@ export const INITIAL_FORM: SubmissionForm = {
     email: '',
 };
 
-export function useSubmissionForm() {
-    const router = useRouter();
+function useSubmissionFormInner() {
+    const searchParams = useSearchParams();
     const [step, setStep] = useState(0);
 
     // Capturar hash da URL ou usar hash padrão do ambiente
     const getOriginHash = () => {
-        const urlHash = router.query.hash as string;
+        const urlHash = searchParams.get('hash');
         const defaultHash = process.env.NEXT_PUBLIC_DEFAULT_HASH || 'R8MHSVsncGgcOEoii5fqtLaCR5BALvcSjFdOfvQQ9mjlQYfBWs';
         return urlHash || defaultHash;
     };
@@ -797,4 +797,8 @@ export function useSubmissionForm() {
         isVerifyingSms,
         handleSubmitContract,
     };
+}
+
+export function useSubmissionForm() {
+    return useSubmissionFormInner();
 }
