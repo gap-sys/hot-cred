@@ -1,95 +1,109 @@
-// utils/crypto.js - Next.js
-import CryptoJS from 'crypto-js';
+// HotcredTest.js
+import fetch from "node-fetch";
+import CryptoJS from "crypto-js";
 
-export class HashGenerator {
-    constructor() {
-        // Chave secreta - deve ser a mesma no Laravel
-        this.secretKey = process.env.NEXT_PUBLIC_CRYPTO_SECRET || 'b9A2XvT3kL8zQwR6JpY1oMfC7NsUeHdZ4xGvBlEtcYrWqPaKmD';
-    }
+// ================================
+// 1. Classe de criptografia AES-256-CBC
+// ================================
+class HotcredCrypto {
+  constructor() {
+    this.secretKey = CryptoJS.enc.Utf8.parse(
+      "i1A7Limrkqh5rU8qsS51XL6smfRx8sbvkA9hlAlqNiMUlf4wdD"
+    );
+  }
 
-    /**
-     * Gera hash criptografado baseado no hash de 50 caracteres + timestamp
-     * @param {string} originalHash - Hash de 50 caracteres
-     * @returns {string} Hash criptografado
-     */
-    generateEncryptedHash(originalHash) {
-        if (!originalHash || originalHash.length !== 50) {
-            throw new Error('Hash deve ter exatamente 50 caracteres');
-        }
+  encrypt(data) {
+    const json = JSON.stringify(data);
+    const iv = CryptoJS.lib.WordArray.random(16);
 
-        // Obter data/hora no fuso horário de São Paulo (considera horário de verão)
-        const now = new Date();
-        
-        // Usar Intl.DateTimeFormat para obter componentes corretos no fuso de São Paulo
-        const formatter = new Intl.DateTimeFormat('pt-BR', {
-            timeZone: 'America/Sao_Paulo',
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false
-        });
-        
-        const parts = formatter.formatToParts(now);
-        const getPartValue = (type) => parts.find(part => part.type === type)?.value || '00';
-        
-        const timestamp = {
-            day: getPartValue('day'),
-            month: getPartValue('month'),
-            year: getPartValue('year'),
-            hour: getPartValue('hour'),
-            minute: getPartValue('minute')
-        };
-        
-        // Para created_at, calcular o timestamp Unix correto para São Paulo
-        const saoPauloDate = new Date(now.toLocaleString('en-US', {timeZone: 'America/Sao_Paulo'}));
-        const utcDate = new Date(now.getTime() + (now.getTimezoneOffset() * 60000));
-        const saoPauloOffset = saoPauloDate.getTime() - utcDate.getTime();
-        const saoPauloTimestamp = now.getTime() + saoPauloOffset;
+    const encrypted = CryptoJS.AES.encrypt(json, this.secretKey, {
+      iv: iv,
+      mode: CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.Pkcs7,
+    });
 
-        // Criar payload com hash + timestamp
-        const payload = {
-            hash: originalHash,
-            timestamp: `${timestamp.day}${timestamp.month}${timestamp.year}${timestamp.hour}${timestamp.minute}`,
-            created_at: saoPauloTimestamp
-        };
+    return iv.toString(CryptoJS.enc.Base64) + ":" + encrypted.toString();
+  }
 
-        // Criptografar payload
-        const encrypted = CryptoJS.AES.encrypt(
-            JSON.stringify(payload),
-            this.secretKey
-        ).toString();
-
-        return encrypted;
-    }
-
-    /**
-     * Descriptografa e valida o hash (para testes locais)
-     * @param {string} encryptedHash
-     * @returns {object|null}
-     */
-    decryptHash(encryptedHash) {
-        try {
-            const decrypted = CryptoJS.AES.decrypt(encryptedHash, this.secretKey);
-            const payload = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
-            
-            return payload;
-        } catch (error) {
-            return null;
-        }
-    }
-}
-
-// Exemplo de uso
-export const hashGenerator = new HashGenerator();
-
-// Função para usar em componentes
-export function createSecureHash(originalHash) {
+  decrypt(text) {
     try {
-        return hashGenerator.generateEncryptedHash(originalHash);
-    } catch (error) {
-        console.error('Erro ao gerar hash:', error);
-        return null;
+      const [ivBase64, encryptedData] = text.split(":");
+      const iv = CryptoJS.enc.Base64.parse(ivBase64);
+      const decrypted = CryptoJS.AES.decrypt(encryptedData, this.secretKey, {
+        iv: iv,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7,
+      });
+      return JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
+    } catch {
+      return null;
     }
+  }
 }
+
+const hotcredCrypto = new HotcredCrypto();
+
+// ================================
+// 2. Função para enviar requisição
+// ================================
+export async function enviarParaAPI() {
+  // 🔹 Payload que a API espera
+  const payload = {
+    id_corban_marketing: 1,
+    id_corban: 35,
+    nome_campanha: "Campanha Teste",
+    expiracao: "2025-10-09T03:00:00.000Z",
+    timestamp: Math.floor(Date.now() / 1000),
+    linkId: "82cd3898",
+  };
+
+  // 🔹 Criptografa o payload
+  const d = hotcredCrypto.encrypt(payload);
+
+  // 🔹 Outros dados obrigatórios
+  const params = {
+    h: "0206463d294442541f6119f7316269b41e2ca26095fc66851fb469fe07e9b66e",
+    p: "82cd3898",
+    d: encodeURIComponent(d), // envia o d gerado
+    cpf: "757.580.730-67",
+    nome: "MatheusPM Teste",
+    sexo: 1,
+    telefone: "31998072869",
+    email: "matheuspm2006@gmail.com",
+    nome_fantasia: "empresa tes6",
+    razao_social: "Teste ltd489",
+    cep: "32671632",
+    endereco: "R. Pedro Rodrigues Laranjeiras",
+    numero: "273",
+    bairro: "Espirito Santo",
+    cidade: "Betim",
+    estado: "MG",
+    banco: "237",
+    agencia: "1548",
+    conta: "21584",
+    tipo_chave_pix: "cpf",
+    chave_pix: "02238056610",
+    cnpj: "50.744.699/0001-77",
+  };
+
+  const url = "https://api.hotcred.com.br/api/seja-parceiro";
+  console.log("🔵 Enviando requisição para a API...");
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(params),
+    });
+
+    const json = await response.json();
+    console.log("✅ RESPOSTA DA API:", json);
+  } catch (error) {
+    console.error("❌ ERRO AO ENVIAR:", error);
+  }
+}
+
+// ================================
+// 3. Executa a função
+// ================================
+enviarParaAPI();
