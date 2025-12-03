@@ -70,6 +70,8 @@ function useSubmissionFormInner() {
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
   const [cpfValidado, setCpfValidado] = useState(false);
+  const [loadingCep, setLoadingCep] = useState(false);
+  const [loadingCnpj, setLoadingCnpj] = useState(false);
 
   useEffect(() => {}, []);
 
@@ -95,6 +97,96 @@ function useSubmissionFormInner() {
   };
 
   const handleCpfBlur = async () => {};
+
+  const handleCepBlur = async (
+    e: React.FocusEvent<HTMLInputElement>
+  ): Promise<boolean> => {
+    const val = e?.target?.value ?? form.cep ?? "";
+    const rawCep = val.replace(/\D/g, "");
+    if (rawCep.length !== 8) return false;
+    setLoadingCep(true);
+    try {
+      const response = await fetch("/api/cep", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cep: rawCep }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setForm((prev) => ({
+          ...prev,
+          endereco: data.logradouro || prev.endereco,
+          bairro: data.bairro || prev.bairro,
+          cidade: data.localidade || prev.cidade,
+          estado: data.uf || prev.estado,
+        }));
+        setErrors((prev) => ({
+          ...prev,
+          endereco: "",
+          bairro: "",
+          cidade: "",
+          estado: "",
+        }));
+        return true;
+      } else {
+        setErrors((prev) => ({ ...prev, cep: data.error || "CEP inválido" }));
+        return false;
+      }
+    } catch (e) {
+      setErrors((prev) => ({ ...prev, cep: "Erro ao consultar CEP" }));
+      return false;
+    } finally {
+      setLoadingCep(false);
+    }
+  };
+
+  const handleCnpjBlur = async () => {
+    const rawCnpj = (form.cnpj || "").replace(/\D/g, "");
+    if (rawCnpj.length !== 14) return;
+    setLoadingCnpj(true);
+    try {
+      const response = await fetch("/api/cnpj", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cnpj: rawCnpj }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setForm((prev) => ({
+          ...prev,
+          razaoSocial: data.razao_social || prev.razaoSocial,
+          nomeFantasia: data.nome_fantasia || prev.nomeFantasia,
+          endereco: data.logradouro || prev.endereco,
+          numero: data.numero || prev.numero,
+          bairro: data.bairro || prev.bairro,
+          cep: data.cep || prev.cep,
+          cidade: data.cidade || prev.cidade,
+          estado: data.uf || prev.estado,
+          complemento: data.complemento || prev.complemento,
+        }));
+        setErrors((prev) => ({
+          ...prev,
+          razaoSocial: "",
+          nomeFantasia: "",
+          endereco: "",
+          numero: "",
+          bairro: "",
+          cep: "",
+          cidade: "",
+          estado: "",
+        }));
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          cnpj: data.message || "CNPJ inválido",
+        }));
+      }
+    } catch (e) {
+      setErrors((prev) => ({ ...prev, cnpj: "Erro ao consultar CNPJ" }));
+    } finally {
+      setLoadingCnpj(false);
+    }
+  };
 
   const handleNext = async () => {
     if (!isCurrentStepValid()) {
@@ -347,6 +439,8 @@ function useSubmissionFormInner() {
     errorMessages,
     handleChange,
     handleCpfBlur,
+    handleCnpjBlur,
+    handleCepBlur,
     handleNext,
     handleBack,
     isCurrentStepValid,
@@ -354,6 +448,8 @@ function useSubmissionFormInner() {
     cpfValidado,
     validateAllFields,
     ensureStepValid,
+    loadingCep,
+    loadingCnpj,
     handleSubmitContract,
   };
 }

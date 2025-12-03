@@ -1,3 +1,5 @@
+"use client";
+
 import {
   StepCadastro,
   StepEndereco,
@@ -47,10 +49,18 @@ export default function Submission() {
           handleChange={handleChange}
           errors={errors}
           step={step}
+          loadingCnpj={formHook.loadingCnpj}
+          handleCnpjBlur={formHook.handleCnpjBlur}
         />
       );
     return (
-      <StepEndereco form={form} handleChange={handleChange} errors={errors} />
+      <StepEndereco
+        form={form}
+        handleChange={handleChange}
+        errors={errors}
+        loadingCep={formHook.loadingCep}
+        handleCepBlur={formHook.handleCepBlur}
+      />
     );
   };
 

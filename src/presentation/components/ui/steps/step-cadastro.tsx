@@ -13,6 +13,8 @@ interface StepCadastroProps {
   ) => void;
   errors: SubmissionErrors;
   step: number;
+  loadingCnpj: boolean;
+  handleCnpjBlur: () => void;
 }
 
 export const StepCadastro: React.FC<StepCadastroProps> = ({
@@ -20,6 +22,8 @@ export const StepCadastro: React.FC<StepCadastroProps> = ({
   registrationType,
   handleChange,
   errors,
+  loadingCnpj,
+  handleCnpjBlur,
 }) => {
   const { fullName } = form;
   const fullNameError = errors.fullName;
@@ -32,12 +36,14 @@ export const StepCadastro: React.FC<StepCadastroProps> = ({
               <MaskedInput
                 value={form.cnpj}
                 onChange={handleChange}
+                onBlur={() => handleCnpjBlur()}
                 id="cnpj"
                 name="cnpj"
                 mask={CNPJ_MASK}
                 label="CNPJ *"
                 placeholder="Digite o CNPJ"
                 error={errors.cnpj}
+                loading={loadingCnpj}
               />
             </div>
             <div className={S.col}>
