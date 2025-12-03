@@ -11,10 +11,41 @@ type SelectUFProps = {
 };
 
 const UFS = [
-  "AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"
+  "AC",
+  "AL",
+  "AP",
+  "AM",
+  "BA",
+  "CE",
+  "DF",
+  "ES",
+  "GO",
+  "MA",
+  "MT",
+  "MS",
+  "MG",
+  "PA",
+  "PB",
+  "PR",
+  "PE",
+  "PI",
+  "RJ",
+  "RN",
+  "RS",
+  "RO",
+  "RR",
+  "SC",
+  "SP",
+  "SE",
+  "TO",
 ];
 
-export const SelectUF: React.FC<SelectUFProps> = ({ name, value, onChange, error }) => {
+export const SelectUF: React.FC<SelectUFProps> = ({
+  name,
+  value,
+  onChange,
+  error,
+}) => {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -67,3 +98,4 @@ export const SelectUF: React.FC<SelectUFProps> = ({ name, value, onChange, error
   );
 };
 
+export default SelectUF;

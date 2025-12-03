@@ -15,7 +15,7 @@ type ModalProps = {
 const Modal = ({ open, close, message }: ModalProps) => (
   <div className={S.container}>
     <ResponsiveModal
-      classNames={{ modal: S.modal }}
+      classNames={{ modal: S.modal, overlay: S.overlay }}
       open={open}
       onClose={close}
       center

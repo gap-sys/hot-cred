@@ -81,7 +81,11 @@ const MaskedInput: React.FC<MaskedInputProps> = ({
       )}
     </div>
     {error && (
-      <span id={`${id}-error`} className={styles.inputErrorText} role="alert">
+      <span
+        id={`${id}-error`}
+        className={`${styles.inputErrorText} ${styles.maskedErrorCompact}`}
+        role="alert"
+      >
         {error}
       </span>
     )}

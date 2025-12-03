@@ -1,24 +1,24 @@
-import Link from 'next/link'
+import Link from "next/link";
 
-import { NavItem } from 'src/presentation/components'
-import { NavMobileProps } from 'src/data/models'
-import { MENU } from 'src/data/ui'
-import { IconX } from '@tabler/icons-react';
+import { NavItem } from "src/presentation/components";
+import { NavMobileProps } from "src/data/models";
+import { MENU } from "src/data/ui";
+import { IconX } from "@tabler/icons-react";
 
-import S from './nav-mobile.module.scss'
+import S from "./nav-mobile.module.scss";
 
 const NavMobile = ({ closeMenu }: NavMobileProps) => {
   const handleClick = () => {
-    closeMenu()
-  }
+    closeMenu();
+  };
 
   return (
-    <div className={S['mobile-nav-container']}>
-      <nav className={S['mobile-nav']}>
-        <section className={S['close-section']}>
-          <IconX onClick={closeMenu} className={S['close-icon']} />
+    <div className={S["mobile-nav-container"]}>
+      <nav className={S["mobile-nav"]}>
+        <section className={S["close-section"]}>
+          <IconX onClick={closeMenu} className={S["close-icon"]} />
         </section>
-        <div className={S['nav-items']}>
+        <div className={S["nav-items"]}>
           {MENU.map((item, key) => (
             <NavItem
               key={key}
@@ -33,8 +33,8 @@ const NavMobile = ({ closeMenu }: NavMobileProps) => {
             </NavItem>
           ))}
         </div>
-        <aside className={S['right-section']}>
-          <Link href="/seja-parceiro" legacyBehavior>
+        <aside className={S["right-section"]}>
+          <Link href="/formulario-seja-parceiro" legacyBehavior>
             <a className={S.link}>
               <span>Quero ser parceiro</span>
             </a>
@@ -42,7 +42,7 @@ const NavMobile = ({ closeMenu }: NavMobileProps) => {
         </aside>
       </nav>
     </div>
-  )
-}
+  );
+};
 
-export default NavMobile
+export default NavMobile;

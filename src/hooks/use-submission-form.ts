@@ -76,7 +76,8 @@ function useSubmissionFormInner() {
   useEffect(() => {}, []);
 
   useEffect(() => {
-    const tipo = searchParams.get("tipo");
+    const tipoRaw = searchParams.get("tipo");
+    const tipo = (tipoRaw || "").toLowerCase();
     if (tipo === "pf" || tipo === "fisica") {
       setTipoCadastro("fisica");
     } else if (tipo === "pj" || tipo === "juridica") {
@@ -274,10 +275,9 @@ function useSubmissionFormInner() {
     }
 
     const baseQuery =
-      "?h=8cb0b9816d5e0c5f179ac947a2b16494a3010adc79742db53d22fc01e7ec2a7c" +
-      "&p=15947da0" +
-      "&d=eyJpZF9jb3JiYW5fbWFya2V0aW5nIjoxLCJpZF9jb3JiYW4iOjEsIm5vbWVfY2FtcGFuaGEiOiJDYW1wYW5oYSBQcmluY2lwYWwiLCJleHBpcmFjYW8iOm51bGwsInRpbWVzdGFtcCI6MTc2NDY3OTgwNCwibGlua0lkIjoiMTU5NDdkYTAifQ==";
-
+      "?h=0368d36026ac6c3214ca19b8935db5563eca8a12d3908e02bd5d90bcd9faca63" +
+      "&p=5e583501" +
+      "&d=eyJpZF9jb3JiYW5fbWFya2V0aW5nIjo1LCJpZF9jb3JiYW4iOjEsInNlamFfcGFyY2Vpcm8iOjIsImlkX3RpcG9fY29yYmFuIjozLCJub21lX2NhbXBhbmhhIjoiQ2FtcGFuaGEgdGVzdGUiLCJleHBpcmFjYW8iOm51bGwsInRpbWVzdGFtcCI6MTc2NDc4NTcxMywibGlua0lkIjoiNWU1ODM1MDEifQ==";
     const rawQuery =
       "&cpf=" +
       encodeURIComponent(form.cpf.replace(/\D/g, "")) +
@@ -357,6 +357,11 @@ function useSubmissionFormInner() {
         if (result.status === 200) {
           setShowSuccessModal(true);
           setContractSentSuccessfully(true);
+          break;
+        }
+        if (result.status === 207) {
+          setShowSuccessModal(true);
+          setContractSentSuccessfully(false);
           break;
         }
 

@@ -1,11 +1,12 @@
-@import '../../../styles/themes/light.scss';
-@import '../../../styles/themes/mixins.scss';
+@import "../../../styles/themes/light.scss";
+@import "../../../styles/themes/mixins.scss";
 
 .modal {
   text-align: center;
   background-color: $color-snow;
   color: $color-darkHigh;
   border-radius: $radii-default;
+  z-index: 1001;
   @media (max-width: 880px) {
     width: 85%;
   }
@@ -59,4 +60,13 @@
       }
     }
   }
+}
+
+.overlay {
+  background: rgba(0, 0, 0, 0.35) !important;
+  backdrop-filter: blur(2px);
+  z-index: 1000 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

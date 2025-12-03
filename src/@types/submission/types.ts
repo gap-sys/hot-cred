@@ -15,11 +15,6 @@ export interface SubmissionForm {
   cidade: string;
   estado: string;
   cep: string;
-  banco?: string;
-  agencia?: string;
-  conta?: string;
-  tipo_chave_pix?: string;
-  chave_pix?: string;
 }
 
 export interface SubmissionErrors {
