@@ -3,7 +3,7 @@
 import InputMask from 'react-input-mask';
 import { FaSpinner, FaCheckCircle } from 'react-icons/fa';
 
-import S from 'src/presentation/pages/submission/submission.module.scss';
+import styles from '../../../pages/submission/submission.module.scss';
 
 type MaskedInputProps = {
     value: string;
@@ -44,9 +44,9 @@ const MaskedInput: React.FC<MaskedInputProps> = ({
     success = false,
 }) => (
     <div>
-        <div className={S.floatingGroup} style={{ position: "relative" }}>
+        <div className={styles.floatingGroup} style={{ position: "relative" }}>
             {leftIcon && (
-                <span className={S.leftIcon}>{leftIcon}</span>
+                <span className={styles.leftIcon}>{leftIcon}</span>
             )}
             <InputMask
                 mask={mask}
@@ -57,7 +57,7 @@ const MaskedInput: React.FC<MaskedInputProps> = ({
                 id={id}
                 placeholder={placeholder}
                 maskChar={null}
-                className={`${error ? S.inputError : ""} ${leftIcon ? S.inputWithIcon : ""} ${inputClassName}`}
+                className={`${error ? styles.inputError : ""} ${leftIcon ? styles.inputWithIcon : ""} ${inputClassName}`}
                 inputMode="numeric"
                 pattern={pattern}
                 disabled={disabled || loading}
@@ -69,17 +69,17 @@ const MaskedInput: React.FC<MaskedInputProps> = ({
             <label htmlFor={id}>{label}</label>
             {loading && (
                 <span style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)' }}>
-                    <FaSpinner className={S.spinner} />
+                    <FaSpinner className={styles.spinner} />
                 </span>
             )}
         </div>
         {success && !loading && (
-            <span className={S.successIcon} aria-label="Válido">
+            <span className={styles.successIcon} aria-label="Válido">
                 <FaCheckCircle color="#000040" size={20} />
             </span>
         )}
         {error && (
-            <span id={`${id}-error`} className={S.inputErrorText} role="alert">
+            <span id={`${id}-error`} className={styles.inputErrorText} role="alert">
                 {error}
             </span>
         )}

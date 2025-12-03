@@ -3,9 +3,9 @@ import fetch from "node-fetch";
 
 async function main() {
   const url = "https://api.hotcred.com.br/api/seja-parceiro"
-    + "?h=7b5af2c47b46318fbfbf448445b207206b25d424e653ac81938b6550f9ba152d"
-    + "&p=722685b1"
-    + "&d=eyJpZF9jb3JiYW5fbWFya2V0aW5nIjozLCJpZF9jb3JiYW4iOjEsIm5vbWVfY2FtcGFuaGEiOiJDYW1wYW5oYSBQcmluY2lwYWwiLCJleHBpcmFjYW8iOm51bGwsInRpbWVzdGFtcCI6MTc2NDY4MDQ0MCwibGlua0lkIjoiNzIyNjg1YjEifQ=="
+    + "?h=8cb0b9816d5e0c5f179ac947a2b16494a3010adc79742db53d22fc01e7ec2a7c"
+    + "&p=15947da0"
+    + "&d=eyJpZF9jb3JiYW5fbWFya2V0aW5nIjoxLCJpZF9jb3JiYW4iOjEsIm5vbWVfY2FtcGFuaGEiOiJDYW1wYW5oYSBQcmluY2lwYWwiLCJleHBpcmFjYW8iOm51bGwsInRpbWVzdGFtcCI6MTc2NDY3OTgwNCwibGlua0lkIjoiMTU5NDdkYTAifQ=="
     // --- dados fictícios ---
     + "&cpf=481.848.388-59"
     + "&nome=Joao Teste"

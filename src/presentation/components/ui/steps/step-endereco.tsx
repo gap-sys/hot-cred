@@ -3,6 +3,7 @@ import { MaskedInput } from "src/presentation/components";
 import { CEP_MASK } from "src/presentation/constants";
 
 import S from "src/presentation/pages/submission/submission.module.scss";
+import { SelectUF } from "src/presentation/components/ui/select-uf";
 
 interface StepEnderecoProps {
   form: SubmissionForm;
@@ -107,20 +108,13 @@ export const StepEndereco: React.FC<StepEnderecoProps> = ({
       </div>
       <div className={S.col}>
         <div className={S.floatingGroup}>
-          <input
+          <SelectUF
             name="estado"
             value={form.estado}
             onChange={handleChange}
-            placeholder="Digite o estado"
-            id="estado"
-            className={
-              errors.estado && errors.estado.length > 0 ? S.inputError : ""
-            }
+            error={errors.estado}
           />
           <label htmlFor="estado">Estado *</label>
-          {errors.estado && errors.estado.length > 0 && (
-            <span className={S.inputErrorText}>{errors.estado}</span>
-          )}
         </div>
       </div>
     </div>

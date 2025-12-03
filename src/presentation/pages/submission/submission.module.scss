@@ -8,7 +8,7 @@
   justify-content: center;
   min-height: 100vh;
   background: #f25836;
-  font-family: sans-serif;
+  font-family: "Geist", sans-serif;
   overflow-x: hidden;
 
   .formWrapper {
@@ -30,11 +30,12 @@
 
   .title {
     text-align: center;
-    font-size: 14px;
+    font-size: 20px;
     font-weight: 400;
     color: rgba(0, 0, 0, 0.87);
     margin-bottom: 32px;
     line-height: 19px;
+    font-family: "Geist", sans-serif;
   }
 
   .steps {
@@ -225,6 +226,12 @@
     }
   }
 
+  .nextBtnInactive {
+    background: lighten($color-hotcred-primary, 25%);
+    color: #fff;
+    opacity: 0.9;
+  }
+
   .loadingButton {
     opacity: 0.85;
     pointer-events: none;
@@ -254,6 +261,24 @@
       transition: border-color 0.2s;
       padding-right: 38px;
       box-sizing: border-box;
+      font-family: "Geist", sans-serif;
+    }
+
+    select {
+      width: 100%;
+      padding: 12px 14px 12px 14px;
+      border: 1.5px solid #d3d3d3;
+      border-radius: 5px;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 400;
+      background: #fff;
+      color: #222;
+      outline: none;
+      transition: border-color 0.2s;
+      box-sizing: border-box;
+      font-family: "Geist", sans-serif;
+      appearance: none;
     }
 
     input:focus {
@@ -282,6 +307,66 @@
     input:focus + label {
       color: $color-hotcred-primary;
     }
+
+    select:focus + label {
+      color: $color-hotcred-primary;
+    }
+
+    .customSelect {
+      position: relative;
+    }
+
+    .customSelectControl {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #d3d3d3;
+      border-radius: 5px;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 400;
+      background: #fff;
+      color: #222;
+      outline: none;
+      transition: border-color 0.2s;
+      box-sizing: border-box;
+      font-family: "Geist", sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
+    .customSelectArrow {
+      color: #888;
+      font-size: 12px;
+      margin-left: 8px;
+    }
+
+    .customSelectMenu {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1px solid #d3d3d3;
+      border-radius: 6px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      max-height: 180px;
+      overflow-y: auto;
+      z-index: 5;
+    }
+
+    .customSelectOption {
+      padding: 10px 14px;
+      font-size: 14px;
+      color: #222;
+      cursor: pointer;
+    }
+
+    .customSelectOption:hover {
+      background: #f5f5f5;
+    }
+  }
 
     input:not(:placeholder-shown):not(:focus) + label {
       color: rgba(0, 0, 0, 0.38);
@@ -338,7 +423,7 @@
     margin-bottom: 2px;
     margin-left: 2px;
     font-weight: 400;
-    font-family: sans-serif;
+    font-family: "Geist", sans-serif;
   }
 
   .leftIcon {
@@ -355,7 +440,7 @@
   .inputWithIcon {
     padding-left: 38px !important;
   }
-}
+
 
 @keyframes spin {
   0% {
@@ -425,8 +510,8 @@
     }
 
     .title {
-      font-size: 13px;
-      margin-bottom: 14px;
+      font-size: 17px;
+      margin-bottom: 17px;
     }
 
     .row {

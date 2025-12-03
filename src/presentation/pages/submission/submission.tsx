@@ -11,6 +11,8 @@ import { FaSpinner } from "react-icons/fa";
 
 import S from "./submission.module.scss";
 
+import { Highlighter } from "src/presentation/components/ui/highlighter";
+
 export default function Submission() {
   const formHook = useSubmissionForm();
   const {
@@ -20,7 +22,6 @@ export default function Submission() {
     setForm,
     tipoCadastro,
     errors,
-    isSendingSms,
     isSubmitting,
     handleChange,
     handleNext,
@@ -34,7 +35,9 @@ export default function Submission() {
     handleSubmitContract,
   } = formHook;
 
-  const isLoading = isSubmitting || isSendingSms;
+  const isLoading = isSubmitting;
+  const isInactiveProsseguir = step === 0 && !formHook.isCurrentStepValid();
+  const isInactiveCadastrar = step === 1 && !formHook.isCurrentStepValid();
   const renderStep = () => {
     if (step === 0)
       return (
@@ -60,7 +63,12 @@ export default function Submission() {
   return (
     <div className={S.container}>
       <div className={S.formWrapper}>
-        <h2 className={S.title}>CADASTRO DE PARCEIRO</h2>
+        <h2 className={S.title}>
+          CADASTRO DE{" "}
+          <Highlighter action="underline" color="#FF9800">
+            PARCEIRO
+          </Highlighter>
+        </h2>
         <form className={S.form} onSubmit={(e) => e.preventDefault()}>
           {renderStep()}
           <div className={S.actions}>
@@ -76,11 +84,16 @@ export default function Submission() {
             )}
             <button
               type="button"
-              className={`${S.nextBtn} ${isLoading ? S.loadingButton : ""}`}
+              className={`${S.nextBtn} ${
+                isInactiveProsseguir || isInactiveCadastrar
+                  ? S.nextBtnInactive
+                  : ""
+              } ${isLoading ? S.loadingButton : ""}`}
               onClick={() => {
                 if (step < 1) {
                   handleNext();
                 } else {
+                  if (!formHook.ensureStepValid()) return;
                   handleSubmitContract();
                 }
               }}
