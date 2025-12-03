@@ -103,8 +103,7 @@ export default function Submission() {
                 if (step < 1) {
                   handleNext();
                 } else {
-                  if (!formHook.ensureStepValid()) return;
-                  handleSubmitContract();
+                  setShowSuccessModal(true);
                 }
               }}
               disabled={isLoading}
@@ -126,7 +125,6 @@ export default function Submission() {
       <SuccessPartnersModal
         isOpen={showSuccessModal}
         onRequestClose={handleSuccessModalClose}
-        contractSentSuccessfully={contractSentSuccessfully}
       />
       <ErrorModal
         isOpen={showErrorModal}

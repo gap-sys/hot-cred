@@ -1,69 +1,69 @@
-@import '../../../styles/themes/light.scss';
+@import "../../../styles/themes/light.scss";
 
 .modal {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #fff;
-    padding: 2rem 1.5rem 1.5rem 1.5rem;
-    border-radius: 12px;
-    width: 100%;
-    max-width: 440px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  position: relative;
+  margin: auto;
+  box-sizing: border-box;
+  background: #fff;
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-    @media (max-width: 480px) {
-        width: 90%;
-        padding: 1.5rem 0.75rem;
-    }
+  @media (max-width: 480px) {
+    width: 90%;
+    padding: 1.5rem 0.75rem;
+  }
 }
 
 .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1000;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(4px);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  box-sizing: border-box;
+  min-height: 100vh;
+  backdrop-filter: blur(4px);
 }
 
 .content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 
-    p {
-        color: #222;
-        font-size: 15px;
-        margin-bottom: 24px;
-        line-height: 1.5;
-        text-align: center;
-    }
+  p {
+    color: #222;
+    font-size: 15px;
+    margin-bottom: 24px;
+    line-height: 1.5;
+    text-align: center;
+  }
 }
 
 .logo {
-    width: 170px;
-    margin-bottom: 18px;
+  width: 170px;
+  margin-bottom: 18px;
 }
 
 .button {
-    background: $color-hotcred-primary;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    font-size: 15px;
-    font-weight: 500;
-    padding: 12px 42px;
-    cursor: pointer;
-    width: 100%;
-    transition: background 0.2s;
+  background: $color-hotcred-primary;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 12px 42px;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.2s;
 }
