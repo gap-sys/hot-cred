@@ -103,9 +103,21 @@ export const StepCadastro: React.FC<StepCadastroProps> = ({
               value={fullName}
               onChange={handleChange}
               onKeyDown={(e) => {
-                if (/\d/.test(e.key)) {
-                  e.preventDefault();
-                }
+                const allowedKeys = [
+                  "Backspace",
+                  "Delete",
+                  "Tab",
+                  "ArrowLeft",
+                  "ArrowRight",
+                  "ArrowUp",
+                  "ArrowDown",
+                  "Home",
+                  "End",
+                ];
+                if (allowedKeys.includes(e.key) || e.ctrlKey || e.metaKey)
+                  return;
+                const isLetterOrSpace = /[A-Za-zÀ-ÖØ-öø-ÿ\s]/.test(e.key);
+                if (!isLetterOrSpace) e.preventDefault();
               }}
               placeholder="Digite seu nome completo"
               id="fullName"
