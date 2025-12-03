@@ -8,6 +8,11 @@
     max-width: 480px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     outline: none;
+    
+    * {
+        font-family: "Geist", sans-serif !important;
+    }
+    
     @media (max-width: 480px) {
         width: 85%;
         padding: 1.5rem 1rem;
@@ -60,12 +65,13 @@
 
 .errorItem {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     margin-bottom: 0.75rem;
     padding: 0.75rem;
     background: #fef7f7;
     border: 1px solid #fecaca;
     border-radius: 8px;
+    gap: 0.5rem;
     
     &:last-child {
         margin-bottom: 0;
@@ -76,7 +82,9 @@
     color: #dc2626;
     font-weight: bold;
     margin-right: 0.5rem;
-    margin-top: 0.1rem;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
     flex-shrink: 0;
 }
 

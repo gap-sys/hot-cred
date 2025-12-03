@@ -3,7 +3,7 @@ export type RegistrationType = 'juridica' | 'fisica';
 export interface SubmissionForm {
     nomeFantasia: string;
     razaoSocial: string;
-    nomeAdmin: string;
+    fullName: string;
     complemento: string;
     email: string;
     whatsapp: string;
@@ -20,7 +20,7 @@ export interface SubmissionForm {
 export interface SubmissionErrors {
     nomeFantasia: string;
     razaoSocial: string;
-    nomeAdmin: string;
+    fullName: string;
     complemento: string;
     email: string;
     whatsapp: string;
