@@ -88,7 +88,8 @@ function useSubmissionFormInner() {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+    const sanitized = name === "fullName" ? value.replace(/[0-9]/g, "") : value;
+    setForm({ ...form, [name]: sanitized });
     setErrors((prev) => ({ ...prev, [name]: "" }));
 
     if (name === "cpf") {

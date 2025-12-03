@@ -33,6 +33,11 @@ input[type='number']::-webkit-inner-spin-button {
   margin: 0;
 }
 
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px white inset;
+  box-shadow: 0 0 0px 1000px white inset;
+  /* opcional, muda a cor do texto */
+}
 h1,
 h2,
 h3,

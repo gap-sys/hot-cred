@@ -74,7 +74,7 @@ export default function Submission() {
     <div className={S.container}>
       <div className={S.formWrapper}>
         <h2 className={S.title}>
-          CADASTRO DE{" "}
+          SEJA{" "}
           <Highlighter action="underline" color="#FF9800">
             PARCEIRO
           </Highlighter>

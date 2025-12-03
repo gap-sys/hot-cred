@@ -11,6 +11,12 @@
   font-family: "Geist", sans-serif;
   overflow-x: hidden;
 
+  @media (max-width: 768px) {
+    background: #fff;
+    min-height: auto;
+    padding: 8px 0;
+  }
+
   .formWrapper {
     background: #fff;
     border-radius: 8px;
@@ -24,7 +30,11 @@
 
     @media (max-width: 768px) {
       padding: 16px;
-      width: 98vw;
+      width: 100vw;
+      border: none;
+      box-shadow: none;
+      margin: 0;
+      border-radius: 0;
     }
   }
 
@@ -137,7 +147,7 @@
   }
 
   .stepContent {
-    margin-bottom: 32px;
+    margin-bottom: 18px;
   }
 
   .row {
@@ -283,6 +293,7 @@
 
     input:focus {
       border: 1.5px solid $color-hotcred-primary;
+      background: rgba($color-hotcred-primary, 0.08);
     }
 
     label {
@@ -310,6 +321,10 @@
 
     select:focus + label {
       color: $color-hotcred-primary;
+    }
+
+    select:focus {
+      background: rgba($color-hotcred-primary, 0.08);
     }
 
     .customSelect {
@@ -350,7 +365,7 @@
       background: #fff;
       border: 1px solid #d3d3d3;
       border-radius: 6px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
       max-height: 180px;
       overflow-y: auto;
       z-index: 5;
@@ -368,79 +383,116 @@
     }
   }
 
-    input:not(:placeholder-shown):not(:focus) + label {
-      color: rgba(0, 0, 0, 0.38);
-    }
-
-    input.inputError + label {
-      color: #e53935 !important;
-    }
+  .container .floatingGroup input:-webkit-autofill,
+  .container .floatingGroup input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px rgba($color-hotcred-primary, 0.08) inset !important;
+    box-shadow: 0 0 0px 1000px rgba($color-hotcred-primary, 0.08) inset !important;
+    -webkit-text-fill-color: #222;
+    caret-color: #222;
+    border: 1.5px solid $color-hotcred-primary !important;
   }
 
-  .inputLabel {
-    font-size: 1rem;
-    color: #888;
-    margin-bottom: 4px;
-    margin-left: 2px;
-    display: block;
+  .container .floatingGroup input:-webkit-autofill:hover,
+  .container .floatingGroup input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0px 1000px rgba($color-hotcred-primary, 0.08) inset !important;
+    box-shadow: 0 0 0px 1000px rgba($color-hotcred-primary, 0.08) inset !important;
   }
 
-  .loader {
-    animation: spin 1s linear infinite;
-    position: absolute;
-    right: 15px;
-    top: 35%;
-    transform: translateY(-50%);
-    z-index: 2;
-    display: flex;
-    align-items: center;
+  .container .floatingGroup input:autofill,
+  .container .floatingGroup input:-moz-autofill {
+    box-shadow: 0 0 0px 1000px rgba($color-hotcred-primary, 0.08) inset !important;
+    -moz-box-shadow: 0 0 0px 1000px rgba($color-hotcred-primary, 0.08) inset !important;
+    color: #222;
   }
 
-  .spinner {
-    animation: spin 1s linear infinite;
-    color: $color-hotcred-primary;
-    font-size: 1.1rem;
-    vertical-align: middle;
-    display: inline-block;
-    margin-right: 4px;
+  .container .floatingGroup select:-webkit-autofill,
+  .container .floatingGroup textarea:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px rgba($color-hotcred-primary, 0.08) inset !important;
+    box-shadow: 0 0 0px 1000px rgba($color-hotcred-primary, 0.08) inset !important;
+    border: 1.5px solid $color-hotcred-primary !important;
   }
 
-  .inputError {
-    border-color: #e53935 !important;
+  input:not(:placeholder-shown):not(:focus) + label {
+    color: rgba(0, 0, 0, 0.38);
   }
 
-  .inputErrorText {
-    color: #e53935;
-    font-size: 13px;
-    margin-top: 2px;
-    margin-left: 4px;
+  input.inputError + label {
+    color: #e53935 !important;
   }
+}
 
-  .labelAbove {
-    display: block;
-    font-size: 14px;
-    color: #888;
-    margin-bottom: 2px;
-    margin-left: 2px;
-    font-weight: 400;
-    font-family: "Geist", sans-serif;
+.inputLabel {
+  font-size: 1rem;
+  color: #888;
+  margin-bottom: 4px;
+  margin-left: 2px;
+  display: block;
+}
+
+.loader {
+  animation: spin 1s linear infinite;
+  position: absolute;
+  right: 15px;
+  top: 35%;
+  transform: translateY(-50%);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+  color: $color-hotcred-primary;
+  font-size: 1.1rem;
+  vertical-align: middle;
+  display: inline-block;
+  margin-right: 4px;
+}
+
+.inputError {
+  border-color: #e53935 !important;
+}
+
+.inputErrorText {
+  color: #e53935;
+  font-size: 13px;
+  margin-top: 2px;
+  margin-left: 4px;
+}
+
+.container {
+  .floatingGroup:has(input[name="cnpj"]) + .inputErrorText,
+  .floatingGroup:has(input[name="cpf"]) + .inputErrorText {
+    margin-top: 2px !important;
   }
+}
 
-  .leftIcon {
-    position: absolute;
-    left: 10px;
-    top: 58%;
-    transform: translateY(-50%);
-    color: #25d366;
-    font-size: 1.3rem;
-    z-index: 2;
-    pointer-events: none;
-  }
+.labelAbove {
+  display: block;
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 2px;
+  margin-left: 2px;
+  font-weight: 400;
+  font-family: "Geist", sans-serif;
+}
 
-  .inputWithIcon {
-    padding-left: 38px !important;
-  }
+.leftIcon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  font-size: 1.075rem;
+  margin-top: 2.575px;
+  margin-left: 4px;
+  z-index: 2;
+  pointer-events: none;
+}
 
+.inputWithIcon {
+  padding-left: 38px !important;
+}
 
 @keyframes spin {
   0% {
@@ -504,6 +556,10 @@
 }
 @media (max-width: 600px) {
   .container {
+    .stepContent {
+      margin-bottom: 18px;
+    }
+
     .formWrapper {
       width: 98vw;
       padding: 12px;
@@ -511,12 +567,12 @@
 
     .title {
       font-size: 17px;
-      margin-bottom: 17px;
+      margin-bottom: 19px;
     }
 
     .row {
       gap: 4px;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
     .col,
@@ -527,12 +583,14 @@
     }
 
     .floatingGroup {
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     .actions {
       flex-direction: column;
       align-items: stretch;
+      margin-top: 8px;
+      gap: 6px;
     }
 
     .backBtn,
@@ -541,6 +599,10 @@
       padding: 10px 16px;
       font-size: 15px;
       line-height: 20px;
+    }
+
+    .nextBtn {
+      padding: 11px 16px;
     }
 
     .floatingGroup input {

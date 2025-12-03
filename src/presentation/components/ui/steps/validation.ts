@@ -135,10 +135,10 @@ export function validateStep(
     }
 
     if (!form.whatsapp) {
-      newErrors.whatsapp = "WhatsApp obrigatório";
+      newErrors.whatsapp = "Telefone obrigatório";
       hasErrors = true;
     } else if (!isValidWhatsapp(form.whatsapp)) {
-      newErrors.whatsapp = "WhatsApp inválido";
+      newErrors.whatsapp = "Telefone inválido";
       hasErrors = true;
     }
     if (!form.email) {
@@ -208,4 +208,3 @@ export function validateStep(
 
   return { newErrors, errorMessages, hasErrors };
 }
-

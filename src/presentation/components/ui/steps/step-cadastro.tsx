@@ -1,7 +1,7 @@
 import { RegistrationType, SubmissionForm, SubmissionErrors } from "src/@types";
 import { MaskedInput } from "src/presentation/components";
 import { WHATSAPP_MASK, CNPJ_MASK, CPF_MASK } from "src/presentation/constants";
-import { FaWhatsapp } from "react-icons/fa";
+import { FiPhone } from "react-icons/fi";
 
 import S from "src/presentation/pages/submission/submission.module.scss";
 
@@ -102,6 +102,11 @@ export const StepCadastro: React.FC<StepCadastroProps> = ({
               name="fullName"
               value={fullName}
               onChange={handleChange}
+              onKeyDown={(e) => {
+                if (/\d/.test(e.key)) {
+                  e.preventDefault();
+                }
+              }}
               placeholder="Digite seu nome completo"
               id="fullName"
               className={fullNameError ? S.inputError : S.inputLabel}
@@ -135,13 +140,13 @@ export const StepCadastro: React.FC<StepCadastroProps> = ({
           <MaskedInput
             value={form.whatsapp}
             onChange={handleChange}
-            id="whatsapp"
+            id="telefone"
             name="whatsapp"
             mask={WHATSAPP_MASK}
-            label="WhatsApp *"
-            leftIcon={<FaWhatsapp />}
+            label="Telefone *"
+            leftIcon={<FiPhone />}
             inputClassName="labelFixed"
-            placeholder="Digite seu WhatsApp"
+            placeholder="Ex.: (11) 91234-5678"
             error={errors.whatsapp}
           />
         </div>
