@@ -5,6 +5,7 @@ import {
   StepEndereco,
   SuccessPartnersModal,
   ErrorModal,
+  TokenVerificationModal,
 } from "src/presentation/components";
 import { useSubmissionForm } from "src/hooks/use-submission-form";
 import { INITIAL_FORM } from "src/hooks/use-submission-form";
@@ -14,8 +15,10 @@ import { FaSpinner } from "react-icons/fa";
 import S from "./submission.module.scss";
 
 import { Highlighter } from "src/presentation/components/ui/highlighter";
+import { useState } from "react";
 
 export default function Submission() {
+  const [showTokenModal, setShowTokenModal] = useState(false);
   const formHook = useSubmissionForm();
   const {
     step,
@@ -30,7 +33,6 @@ export default function Submission() {
     handleBack,
     showSuccessModal,
     setShowSuccessModal,
-    contractSentSuccessfully,
     showErrorModal,
     setShowErrorModal,
     errorMessages,
@@ -38,7 +40,11 @@ export default function Submission() {
   } = formHook;
 
   const isLoading = isSubmitting;
-  const isInactiveProsseguir = step === 0 && !formHook.isCurrentStepValid();
+  const isInactiveProsseguir =
+    step === 0 &&
+    (!formHook.isCurrentStepValid() ||
+      formHook.loadingCnpj ||
+      formHook.loadingCpf);
   const isInactiveCadastrar = step === 1 && !formHook.isCurrentStepValid();
   const renderStep = () => {
     if (step === 0)
@@ -51,6 +57,7 @@ export default function Submission() {
           step={step}
           loadingCnpj={formHook.loadingCnpj}
           handleCnpjBlur={formHook.handleCnpjBlur}
+          loadingCpf={formHook.loadingCpf}
         />
       );
     return (
@@ -69,6 +76,17 @@ export default function Submission() {
     setStep(0);
     setShowSuccessModal(false);
   };
+
+  const maskedPhone = (() => {
+    const raw = (form.whatsapp || "").replace(/\D/g, "");
+    if (raw.length >= 10) {
+      const ddd = raw.slice(0, 2);
+      const first = raw[2] || "";
+      const last4 = raw.slice(-4);
+      return `(${ddd}) ${first}****-${last4}`;
+    }
+    return form.whatsapp || "";
+  })();
 
   return (
     <div className={S.container}>
@@ -103,10 +121,13 @@ export default function Submission() {
                 if (step < 1) {
                   handleNext();
                 } else {
-                  setShowSuccessModal(true);
+                  setShowTokenModal(true);
                 }
               }}
-              disabled={isLoading}
+              disabled={
+                isLoading ||
+                (step === 0 ? isInactiveProsseguir : isInactiveCadastrar)
+              }
             >
               {isLoading ? (
                 <>
@@ -125,6 +146,12 @@ export default function Submission() {
       <SuccessPartnersModal
         isOpen={showSuccessModal}
         onRequestClose={handleSuccessModalClose}
+      />
+      <TokenVerificationModal
+        isOpen={showTokenModal}
+        onRequestClose={() => setShowTokenModal(false)}
+        phoneMasked={maskedPhone}
+        onResend={() => {}}
       />
       <ErrorModal
         isOpen={showErrorModal}

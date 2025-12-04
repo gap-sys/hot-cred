@@ -1,5 +1,11 @@
 import { NextResponse } from "next/server";
 
+const cnpjCache = new Map<
+  string,
+  { status: number; data: any; expires: number }
+>();
+const CACHE_TTL_MS = Number(process.env.CNPJ_CACHE_TTL_MS || 300000);
+
 export async function POST(req: Request) {
   try {
     const { cnpj } = await req.json();
@@ -15,6 +21,13 @@ export async function POST(req: Request) {
         { error: true, message: "CNPJ inválido" },
         { status: 400 }
       );
+    }
+
+    const now = Date.now();
+    const key = clean;
+    const cached = cnpjCache.get(key);
+    if (cached && cached.expires > now) {
+      return NextResponse.json(cached.data, { status: cached.status });
     }
 
     const fetchPublica = async () => {
@@ -62,22 +75,32 @@ export async function POST(req: Request) {
     };
 
     const primary = await fetchPublica();
-    if (primary.ok) return NextResponse.json(primary.data, { status: 200 });
+    if (primary.ok) {
+      cnpjCache.set(key, {
+        status: 200,
+        data: primary.data,
+        expires: now + CACHE_TTL_MS,
+      });
+      return NextResponse.json(primary.data, { status: 200 });
+    }
 
     const fallback = await fetchBrasilApi();
-    if (fallback.ok) return NextResponse.json(fallback.data, { status: 200 });
+    if (fallback.ok) {
+      cnpjCache.set(key, {
+        status: 200,
+        data: fallback.data,
+        expires: now + CACHE_TTL_MS,
+      });
+      return NextResponse.json(fallback.data, { status: 200 });
+    }
 
     const status = primary.status || fallback.status || 500;
-    if (status === 404) {
-      return NextResponse.json(
-        { error: true, message: "CNPJ não encontrado" },
-        { status }
-      );
-    }
-    return NextResponse.json(
-      { error: true, message: "Erro ao consultar CNPJ" },
-      { status }
-    );
+    const dataResp =
+      status === 404
+        ? { error: true, message: "CNPJ não encontrado" }
+        : { error: true, message: "Erro ao consultar CNPJ" };
+    cnpjCache.set(key, { status, data: dataResp, expires: now + CACHE_TTL_MS });
+    return NextResponse.json(dataResp, { status });
   } catch (error: any) {
     return NextResponse.json(
       {

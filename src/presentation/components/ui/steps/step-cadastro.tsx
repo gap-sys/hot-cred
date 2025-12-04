@@ -15,6 +15,7 @@ interface StepCadastroProps {
   step: number;
   loadingCnpj: boolean;
   handleCnpjBlur: () => void;
+  loadingCpf: boolean;
 }
 
 export const StepCadastro: React.FC<StepCadastroProps> = ({
@@ -24,6 +25,7 @@ export const StepCadastro: React.FC<StepCadastroProps> = ({
   errors,
   loadingCnpj,
   handleCnpjBlur,
+  loadingCpf,
 }) => {
   const { fullName } = form;
   const fullNameError = errors.fullName;
@@ -45,6 +47,11 @@ export const StepCadastro: React.FC<StepCadastroProps> = ({
                 error={errors.cnpj}
                 loading={loadingCnpj}
               />
+              {loadingCnpj && !errors.cnpj && (
+                <span className={S.inputInfoText}>
+                  Verificando CNPJ no sistema...
+                </span>
+              )}
             </div>
             <div className={S.col}>
               <div className={S.floatingGroup}>
@@ -94,7 +101,13 @@ export const StepCadastro: React.FC<StepCadastroProps> = ({
             label="CPF do administrador *"
             placeholder="Digite o CPF do administrador"
             error={errors.cpf}
+            loading={loadingCpf}
           />
+          {loadingCpf && !errors.cpf && (
+            <span className={S.inputInfoText}>
+              Verificando CPF no sistema...
+            </span>
+          )}
         </div>
         <div className={S.col}>
           <div className={S.floatingGroup}>

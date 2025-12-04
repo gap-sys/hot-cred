@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import CryptoJS from "crypto-js";
 import { useSearchParams } from "next/navigation";
 
@@ -72,6 +72,15 @@ function useSubmissionFormInner() {
   const [cpfValidado, setCpfValidado] = useState(false);
   const [loadingCep, setLoadingCep] = useState(false);
   const [loadingCnpj, setLoadingCnpj] = useState(false);
+  const [loadingCpf, setLoadingCpf] = useState(false);
+
+  const cnpjDebounceRef = useRef<number | null>(null);
+  const cnpjAbortRef = useRef<AbortController | null>(null);
+  const cnpjPrefillDebounceRef = useRef<number | null>(null);
+  const cnpjPrefillAbortRef = useRef<AbortController | null>(null);
+  const lastPrefilledCnpjRef = useRef<string>("");
+  const cpfDebounceRef = useRef<number | null>(null);
+  const cpfAbortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {}, []);
 
@@ -92,7 +101,9 @@ function useSubmissionFormInner() {
     const sanitized =
       name === "fullName" ? value.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ\s]/g, "") : value;
     setForm({ ...form, [name]: sanitized });
-    setErrors((prev) => ({ ...prev, [name]: "" }));
+    if (name !== "cnpj" && name !== "cpf") {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
 
     if (name === "cpf") {
       setCpfValidado(cpf.isValid(value));
@@ -100,6 +111,151 @@ function useSubmissionFormInner() {
   };
 
   const handleCpfBlur = async () => {};
+
+  useEffect(() => {
+    const digits = (form.cpf || "").replace(/\D/g, "");
+    if (digits.length !== 11) {
+      if (cpfAbortRef.current) cpfAbortRef.current.abort();
+      setLoadingCpf(false);
+      setErrors((prev) => ({ ...prev, cpf: "" }));
+      return;
+    }
+    if (cpfDebounceRef.current) clearTimeout(cpfDebounceRef.current);
+    setLoadingCpf(true);
+    cpfDebounceRef.current = window.setTimeout(async () => {
+      try {
+        if (cpfAbortRef.current) cpfAbortRef.current.abort();
+        cpfAbortRef.current = new AbortController();
+        const resp = await fetch(`/api/validar-cpf?cpf=${digits}`, {
+          cache: "no-store",
+          signal: cpfAbortRef.current.signal,
+        });
+        const data = await resp.json();
+        if (resp.ok && data && typeof data === "object") {
+          if (data.existe) {
+            setErrors((prev) => ({
+              ...prev,
+              cpf: data.mensagem || "CPF já cadastrado.",
+            }));
+          } else {
+            setErrors((prev) => ({ ...prev, cpf: "" }));
+          }
+        }
+      } catch (e) {
+        // Silenciar falhas de rede; não bloquear avanço
+      } finally {
+        setLoadingCpf(false);
+      }
+    }, 600) as unknown as number;
+    return () => {
+      if (cpfDebounceRef.current) clearTimeout(cpfDebounceRef.current);
+      if (cpfAbortRef.current) cpfAbortRef.current.abort();
+    };
+  }, [form.cpf]);
+
+  useEffect(() => {
+    const digits = (form.cnpj || "").replace(/\D/g, "");
+    if (digits.length !== 14) {
+      if (cnpjAbortRef.current) cnpjAbortRef.current.abort();
+      setLoadingCnpj(false);
+      setErrors((prev) => ({ ...prev, cnpj: "" }));
+      return;
+    }
+    if (cnpjDebounceRef.current) {
+      clearTimeout(cnpjDebounceRef.current);
+    }
+    setLoadingCnpj(true);
+    cnpjDebounceRef.current = window.setTimeout(async () => {
+      try {
+        if (cnpjAbortRef.current) cnpjAbortRef.current.abort();
+        cnpjAbortRef.current = new AbortController();
+        const resp = await fetch(`/api/validar-cnpj?cnpj=${digits}`, {
+          cache: "no-store",
+          signal: cnpjAbortRef.current.signal,
+        });
+        const data = await resp.json();
+        if (resp.ok && data && typeof data === "object") {
+          if (data.existe) {
+            setErrors((prev) => ({
+              ...prev,
+              cnpj: data.mensagem || "CNPJ já cadastrado.",
+            }));
+          } else {
+            setErrors((prev) => ({ ...prev, cnpj: "" }));
+          }
+        }
+      } catch (e) {
+        // Silenciar falhas de rede; não bloquear avanço
+      } finally {
+        setLoadingCnpj(false);
+      }
+    }, 600) as unknown as number;
+    return () => {
+      if (cnpjDebounceRef.current) clearTimeout(cnpjDebounceRef.current);
+      if (cnpjAbortRef.current) cnpjAbortRef.current.abort();
+    };
+  }, [form.cnpj]);
+
+  useEffect(() => {
+    const digits = (form.cnpj || "").replace(/\D/g, "");
+    if (digits.length !== 14) {
+      if (cnpjPrefillAbortRef.current) cnpjPrefillAbortRef.current.abort();
+      return;
+    }
+    const needsPrefill =
+      !form.razaoSocial || !form.nomeFantasia || !form.endereco;
+    if (!needsPrefill) return;
+    if (lastPrefilledCnpjRef.current === digits) return;
+    if (cnpjPrefillDebounceRef.current) {
+      clearTimeout(cnpjPrefillDebounceRef.current);
+    }
+    cnpjPrefillDebounceRef.current = window.setTimeout(async () => {
+      try {
+        if (cnpjPrefillAbortRef.current) cnpjPrefillAbortRef.current.abort();
+        cnpjPrefillAbortRef.current = new AbortController();
+        const resp = await fetch("/api/cnpj", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ cnpj: digits }),
+          signal: cnpjPrefillAbortRef.current.signal,
+        });
+        if (resp.ok) {
+          const data = await resp.json();
+          setForm((prev) => ({
+            ...prev,
+            razaoSocial: data.razao_social || prev.razaoSocial,
+            nomeFantasia: data.nome_fantasia || prev.nomeFantasia,
+            endereco: data.logradouro || prev.endereco,
+            numero: data.numero || prev.numero,
+            bairro: data.bairro || prev.bairro,
+            cep: data.cep || prev.cep,
+            cidade: data.cidade || prev.cidade,
+            estado: data.uf || prev.estado,
+            complemento: data.complemento || prev.complemento,
+          }));
+          setErrors((prev) => ({
+            ...prev,
+            razaoSocial: "",
+            nomeFantasia: "",
+            endereco: "",
+            numero: "",
+            bairro: "",
+            cep: "",
+            cidade: "",
+            estado: "",
+          }));
+          lastPrefilledCnpjRef.current = digits;
+        }
+      } catch {
+        // Silenciar; prefill é opcional
+      }
+    }, 800) as unknown as number;
+    return () => {
+      if (cnpjPrefillDebounceRef.current)
+        clearTimeout(cnpjPrefillDebounceRef.current);
+      if (cnpjPrefillAbortRef.current) cnpjPrefillAbortRef.current.abort();
+    };
+  }, [form.cnpj, form.razaoSocial, form.nomeFantasia, form.endereco]);
 
   const handleCepBlur = async (
     e: React.FocusEvent<HTMLInputElement>
@@ -143,64 +299,52 @@ function useSubmissionFormInner() {
     }
   };
 
-  const handleCnpjBlur = async () => {
-    const rawCnpj = (form.cnpj || "").replace(/\D/g, "");
-    if (rawCnpj.length !== 14) return;
-    setLoadingCnpj(true);
-    try {
-      const response = await fetch("/api/cnpj", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cnpj: rawCnpj }),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        setForm((prev) => ({
-          ...prev,
-          razaoSocial: data.razao_social || prev.razaoSocial,
-          nomeFantasia: data.nome_fantasia || prev.nomeFantasia,
-          endereco: data.logradouro || prev.endereco,
-          numero: data.numero || prev.numero,
-          bairro: data.bairro || prev.bairro,
-          cep: data.cep || prev.cep,
-          cidade: data.cidade || prev.cidade,
-          estado: data.uf || prev.estado,
-          complemento: data.complemento || prev.complemento,
-        }));
-        setErrors((prev) => ({
-          ...prev,
-          razaoSocial: "",
-          nomeFantasia: "",
-          endereco: "",
-          numero: "",
-          bairro: "",
-          cep: "",
-          cidade: "",
-          estado: "",
-        }));
-      } else {
-        setErrors((prev) => ({
-          ...prev,
-          cnpj: data.message || "CNPJ inválido",
-        }));
-      }
-    } catch (e) {
-      setErrors((prev) => ({ ...prev, cnpj: "Erro ao consultar CNPJ" }));
-    } finally {
-      setLoadingCnpj(false);
-    }
-  };
+  const handleCnpjBlur = async () => {};
 
   const handleNext = async () => {
+    if (step === 0 && loadingCpf) {
+      setErrorMessages(["Aguarde a verificação do CPF antes de prosseguir."]);
+      setShowErrorModal(true);
+      return;
+    }
+    if (step === 0 && loadingCnpj) {
+      setErrorMessages(["Aguarde a verificação do CNPJ antes de prosseguir."]);
+      setShowErrorModal(true);
+      return;
+    }
+    // Bloqueio imediato se CNPJ existir já cadastrado
+    if (errors.cnpj && errors.cnpj.length > 0) {
+      setErrorMessages([errors.cnpj]);
+      setShowErrorModal(true);
+      return;
+    }
     if (!isCurrentStepValid()) {
       const { newErrors, errorMessages, hasErrors } = externalValidateStep(
         step,
         form,
         tipoCadastro
       );
-      if (hasErrors) {
-        setErrors(newErrors);
-        setErrorMessages(errorMessages);
+      const mergedErrors = { ...newErrors } as SubmissionErrors;
+      // Preserva mensagem de CNPJ já cadastrado
+      if (errors.cnpj && errors.cnpj.length > 0) {
+        mergedErrors.cnpj = errors.cnpj;
+      }
+      // Preserva mensagem de CPF já cadastrado
+      if (errors.cpf && errors.cpf.length > 0) {
+        mergedErrors.cpf = errors.cpf;
+      }
+      const combinedMessages = [
+        ...errorMessages,
+        ...(errors.cnpj && errors.cnpj.length > 0 ? [errors.cnpj] : []),
+        ...(errors.cpf && errors.cpf.length > 0 ? [errors.cpf] : []),
+      ];
+      const shouldBlock =
+        hasErrors ||
+        (errors.cnpj && errors.cnpj.length > 0) ||
+        (errors.cpf && errors.cpf.length > 0);
+      if (shouldBlock) {
+        if (hasErrors) setErrors(mergedErrors);
+        setErrorMessages(combinedMessages);
         setShowErrorModal(true);
         return;
       }
@@ -234,9 +378,25 @@ function useSubmissionFormInner() {
         form,
         tipoCadastro
       );
-      if (hasErrors) {
-        setErrors(newErrors);
-        setErrorMessages(errorMessages);
+      const mergedErrors = { ...newErrors } as SubmissionErrors;
+      if (errors.cnpj && errors.cnpj.length > 0) {
+        mergedErrors.cnpj = errors.cnpj;
+      }
+      if (errors.cpf && errors.cpf.length > 0) {
+        mergedErrors.cpf = errors.cpf;
+      }
+      const combinedMessages = [
+        ...errorMessages,
+        ...(errors.cnpj && errors.cnpj.length > 0 ? [errors.cnpj] : []),
+        ...(errors.cpf && errors.cpf.length > 0 ? [errors.cpf] : []),
+      ];
+      if (
+        hasErrors ||
+        (errors.cnpj && errors.cnpj.length > 0) ||
+        (errors.cpf && errors.cpf.length > 0)
+      ) {
+        setErrors(mergedErrors);
+        setErrorMessages(combinedMessages);
         setShowErrorModal(true);
         return false;
       }
@@ -457,6 +617,7 @@ function useSubmissionFormInner() {
     ensureStepValid,
     loadingCep,
     loadingCnpj,
+    loadingCpf,
     handleSubmitContract,
   };
 }
