@@ -8,7 +8,7 @@
   background-color: rgba(0, 0, 0, 0.35);
   display: grid;
   place-items: center;
-  padding: 16px;
+  padding: 24px;
   box-sizing: border-box;
   min-height: 100vh;
   backdrop-filter: blur(4px);
@@ -18,7 +18,7 @@
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
-  width: 95vw;
+  width: 100%;
   max-width: 420px;
   padding: 20px;
 }
@@ -40,8 +40,8 @@
 
 .digitGrid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 10px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
   margin: 12px 0 8px 0;
 }
 
@@ -64,6 +64,7 @@
   color: #e53935;
   font-size: 13px;
   margin-top: 6px;
+  text-align: center;
 }
 
 .actions {

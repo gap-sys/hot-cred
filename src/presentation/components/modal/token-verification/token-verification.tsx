@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+
 import styles from "./token-verification.module.scss";
 
 type Props = {
@@ -19,14 +20,14 @@ export const TokenVerificationModal: React.FC<Props> = ({
   onResend,
   phoneMasked,
 }) => {
-  const [digits, setDigits] = useState<string[]>(["", "", "", "", "", ""]);
+  const [digits, setDigits] = useState<string[]>(["", "", "", ""]);
   const [error, setError] = useState("");
   const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
   const [countdown, setCountdown] = useState(45);
 
   useEffect(() => {
     if (!isOpen) return;
-    setDigits(["", "", "", "", "", ""]);
+    setDigits(["", "", "", ""]);
     setError("");
     setCountdown(45);
     const timer = setInterval(() => {
@@ -35,12 +36,18 @@ export const TokenVerificationModal: React.FC<Props> = ({
     return () => clearInterval(timer);
   }, [isOpen]);
 
+  useEffect(() => {
+    if (digits.every((d) => d.length === 1)) {
+      handleValidate();
+    }
+  }, [digits]);
+
   if (!isOpen) return null;
 
   const handleValidate = () => {
     const code = digits.join("").replace(/\D/g, "");
-    if (!code || code.length < 6) {
-      setError("Digite o token de 6 dígitos.");
+    if (!code || code.length < 4) {
+      setError("Digite o código de 4 dígitos.");
       return;
     }
     setError("");
@@ -73,10 +80,10 @@ export const TokenVerificationModal: React.FC<Props> = ({
     const text = e.clipboardData.getData("text").replace(/\D/g, "");
     if (!text) return;
     e.preventDefault();
-    const next = ["", "", "", "", "", ""];
-    for (let i = 0; i < Math.min(6, text.length); i++) next[i] = text[i];
+    const next = ["", "", "", ""];
+    for (let i = 0; i < Math.min(4, text.length); i++) next[i] = text[i];
     setDigits(next);
-    inputsRef.current[Math.min(5, text.length - 1)]?.focus();
+    inputsRef.current[Math.min(3, text.length - 1)]?.focus();
   };
 
   const handleResend = () => {
@@ -93,9 +100,11 @@ export const TokenVerificationModal: React.FC<Props> = ({
       onClick={onRequestClose}
     >
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-        <div className={styles.title}>Digite o código de confirmação</div>
+        <div className={styles.title}>Confirmação por SMS</div>
         <div className={styles.subtitle}>
-          Enviamos um código via SMS para {phoneMasked || "seu número"}.
+          Antes de finalizar seu cadastro, enviamos um código de 4 dígitos por SMS para{" "}
+          <strong>{phoneMasked || "seu número"}</strong>.
+          <strong>{phoneMasked || "seu número"}</strong>.
         </div>
         <div className={styles.digitGrid}>
           {digits.map((d, i) => (
@@ -133,6 +142,7 @@ export const TokenVerificationModal: React.FC<Props> = ({
             className={styles.primaryBtn}
             type="button"
             onClick={handleValidate}
+            disabled={!digits.every((d) => d.length === 1)}
           >
             Confirmar código
           </button>

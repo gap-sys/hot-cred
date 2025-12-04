@@ -152,6 +152,10 @@ export default function Submission() {
         onRequestClose={() => setShowTokenModal(false)}
         phoneMasked={maskedPhone}
         onResend={() => {}}
+        onValidate={() => {
+          setShowTokenModal(false);
+          setShowSuccessModal(true);
+        }}
       />
       <ErrorModal
         isOpen={showErrorModal}
