@@ -25,6 +25,21 @@ export const SuccessPartnersModal = ({
     return () => document.removeEventListener("keydown", handleKey);
   }, []);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const body = document.body;
+    const prevOverflow = body.style.overflow;
+    const prevPaddingRight = body.style.paddingRight;
+    const scrollBarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
+    body.style.overflow = "hidden";
+    if (scrollBarWidth > 0) body.style.paddingRight = `${scrollBarWidth}px`;
+    return () => {
+      body.style.overflow = prevOverflow;
+      body.style.paddingRight = prevPaddingRight;
+    };
+  }, [isOpen]);
+
   const node = (
     <div
       className={styles.overlay}

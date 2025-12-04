@@ -19,6 +19,7 @@ export const ErrorModal: React.FC<ErrorModalProps> = ({
         open={isOpen}
         onClose={onRequestClose}
         center
+        blockScroll={true}
         classNames={{ modal: styles.modal, overlay: styles.overlay }}
         closeIcon={null}
         aria-labelledby="error-modal-title"
