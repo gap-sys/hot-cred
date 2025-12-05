@@ -41,12 +41,8 @@ export default function Submission() {
   const [sendingToken, setSendingToken] = useState(false);
 
   const isLoading = isSubmitting;
-  const isInactiveProsseguir =
-    step === 0 &&
-    (!formHook.isCurrentStepValid() ||
-      formHook.loadingCnpj ||
-      formHook.loadingCpf);
-  const isInactiveCadastrar = step === 1 && !formHook.isCurrentStepValid();
+  const isInactiveProsseguir = false;
+  const isInactiveCadastrar = false;
   const renderStep = () => {
     if (step === 0)
       return (
@@ -103,10 +99,6 @@ export default function Submission() {
             <button
               type="button"
               className={`${S.nextBtn} ${
-                isInactiveProsseguir || isInactiveCadastrar
-                  ? S.nextBtnInactive
-                  : ""
-              } ${
                 (isLoading || sendingToken) && !showTokenModal
                   ? S.loadingButton
                   : ""
@@ -121,12 +113,7 @@ export default function Submission() {
                   if (sent) setShowTokenModal(true);
                 }
               }}
-              disabled={
-                showTokenModal ||
-                isLoading ||
-                sendingToken ||
-                (step === 0 ? isInactiveProsseguir : isInactiveCadastrar)
-              }
+              disabled={showTokenModal || isLoading || sendingToken}
             >
               {isLoading && !showTokenModal ? (
                 <>

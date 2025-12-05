@@ -179,7 +179,59 @@ function useSubmissionFormInner() {
     }
   };
 
-  const handleCpfBlur = async () => {};
+  const handleCpfBlur = async () => {
+    const digits = (form.cpf || "").replace(/\D/g, "");
+    if (digits.length !== 11) return false;
+    if (!cpf.isValid(form.cpf)) {
+      setErrors((prev) => ({ ...prev, cpf: "CPF inválido" }));
+      return false;
+    }
+    const cached = cpfValidationCacheRef.current[digits];
+    if (cached) {
+      setErrors((prev) => ({
+        ...prev,
+        cpf: cached.existe ? cached.mensagem || "CPF já cadastrado." : "",
+      }));
+      return !cached.existe;
+    }
+    setLoadingCpf(true);
+    try {
+      const resp = await axios.get(`${API_VALIDAR_CPF}?cpf=${digits}`);
+      const data = resp.data;
+      if (
+        resp.status >= 200 &&
+        resp.status < 300 &&
+        data &&
+        typeof data === "object"
+      ) {
+        cpfValidationCacheRef.current[digits] = {
+          existe: !!data.existe,
+          mensagem: data.mensagem,
+          ts: Date.now(),
+        };
+        try {
+          localStorage.setItem(
+            LS_KEY_CPF_VALIDATE,
+            JSON.stringify(cpfValidationCacheRef.current)
+          );
+        } catch {}
+        if (data.existe) {
+          setErrors((prev) => ({
+            ...prev,
+            cpf: data.mensagem || "CPF já cadastrado.",
+          }));
+          return false;
+        } else {
+          setErrors((prev) => ({ ...prev, cpf: "" }));
+          return true;
+        }
+      }
+    } catch {
+    } finally {
+      setLoadingCpf(false);
+    }
+    return false;
+  };
 
   useEffect(() => {
     const digits = (form.cpf || "").replace(/\D/g, "");
@@ -457,7 +509,59 @@ function useSubmissionFormInner() {
     }
   };
 
-  const handleCnpjBlur = async () => {};
+  const handleCnpjBlur = async () => {
+    const digits = (form.cnpj || "").replace(/\D/g, "");
+    if (digits.length !== 14) return false;
+    if (!cnpj.isValid(form.cnpj)) {
+      setErrors((prev) => ({ ...prev, cnpj: "CNPJ inválido" }));
+      return false;
+    }
+    const cached = cnpjValidationCacheRef.current[digits];
+    if (cached) {
+      setErrors((prev) => ({
+        ...prev,
+        cnpj: cached.existe ? cached.mensagem || "CNPJ já cadastrado." : "",
+      }));
+      return !cached.existe;
+    }
+    setLoadingCnpj(true);
+    try {
+      const resp = await axios.get(`${API_VALIDAR_CNPJ}?cnpj=${digits}`);
+      const data = resp.data;
+      if (
+        resp.status >= 200 &&
+        resp.status < 300 &&
+        data &&
+        typeof data === "object"
+      ) {
+        cnpjValidationCacheRef.current[digits] = {
+          existe: !!data.existe,
+          mensagem: data.mensagem,
+          ts: Date.now(),
+        };
+        try {
+          localStorage.setItem(
+            LS_KEY_CNPJ_VALIDATE,
+            JSON.stringify(cnpjValidationCacheRef.current)
+          );
+        } catch {}
+        if (data.existe) {
+          setErrors((prev) => ({
+            ...prev,
+            cnpj: data.mensagem || "CNPJ já cadastrado.",
+          }));
+          return false;
+        } else {
+          setErrors((prev) => ({ ...prev, cnpj: "" }));
+          return true;
+        }
+      }
+    } catch {
+    } finally {
+      setLoadingCnpj(false);
+    }
+    return false;
+  };
 
   const handleSendToken = async (): Promise<boolean> => {
     const digits = (form.whatsapp || "").replace(/\D/g, "");
@@ -530,21 +634,17 @@ function useSubmissionFormInner() {
   };
 
   const handleNext = async () => {
-    if (step === 0 && loadingCpf) {
-      setErrorMessages(["Aguarde a verificação do CPF antes de prosseguir."]);
-      setShowErrorModal(true);
-      return;
-    }
-    if (step === 0 && loadingCnpj) {
-      setErrorMessages(["Aguarde a verificação do CNPJ antes de prosseguir."]);
-      setShowErrorModal(true);
-      return;
-    }
-    // Bloqueio imediato se CNPJ existir já cadastrado
-    if (errors.cnpj && errors.cnpj.length > 0) {
-      setErrorMessages([errors.cnpj]);
-      setShowErrorModal(true);
-      return;
+    if (step === 0) {
+      const cpfDigits = (form.cpf || "").replace(/\D/g, "");
+      if (cpfDigits.length === 11 && cpf.isValid(form.cpf)) {
+        await handleCpfBlur();
+      }
+      if (tipoCadastro === "juridica") {
+        const cnpjDigits = (form.cnpj || "").replace(/\D/g, "");
+        if (cnpjDigits.length === 14 && cnpj.isValid(form.cnpj)) {
+          await handleCnpjBlur();
+        }
+      }
     }
     if (!isCurrentStepValid()) {
       const { newErrors, errorMessages, hasErrors } = externalValidateStep(

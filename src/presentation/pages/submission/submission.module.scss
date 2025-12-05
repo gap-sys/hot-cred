@@ -453,22 +453,38 @@
   margin-right: 4px;
 }
 
+/* Ensure inline spinner wrapper sits above the input */
+.floatingGroup > span {
+  z-index: 3;
+}
+
 .inputError {
   border-color: #e53935 !important;
 }
 
 .inputErrorText {
   color: #e53935;
-  font-size: 13px;
+  font-size: 14px;
+  line-height: 20px;
   margin-top: 2px;
   margin-left: 4px;
+  display: block;
+}
+
+.maskedErrorCompact {
+  display: block;
+  margin-top: 4px;
+  margin-left: 4px;
+  font-size: 14px;
+  line-height: 20px;
 }
 
 .inputInfoText {
   color: #8e8e93;
-  font-size: 13px;
+  font-size: 14px;
   margin-top: 2px;
   margin-left: 4px;
+  display: block;
 }
 
 .floatingGroup + .inputErrorText {
@@ -505,6 +521,16 @@
   margin-left: 4px;
   z-index: 2;
   pointer-events: none;
+}
+
+.successIcon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: $color-success;
+  display: inline-flex;
+  align-items: center;
 }
 
 .inputWithIcon {
@@ -625,6 +651,7 @@
     .floatingGroup input {
       font-size: 16px;
       padding: 12px 12px;
+      padding-right: 38px;
     }
   }
 }
