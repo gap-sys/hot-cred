@@ -24,6 +24,7 @@ export const TokenVerificationModal: React.FC<Props> = ({
   const [error, setError] = useState("");
   const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
   const [countdown, setCountdown] = useState(45);
+  const [validating, setValidating] = useState(false);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -51,22 +52,23 @@ export const TokenVerificationModal: React.FC<Props> = ({
     };
   }, [isOpen]);
 
-  useEffect(() => {
-    if (digits.every((d) => d.length === 1)) {
-      handleValidate();
-    }
-  }, [digits]);
-
   if (!isOpen) return null;
 
-  const handleValidate = () => {
+  const handleValidate = async () => {
     const code = digits.join("").replace(/\D/g, "");
     if (!code || code.length < 6) {
       setError("Digite o código de 6 dígitos.");
       return;
     }
     setError("");
-    if (onValidate) onValidate(code);
+    if (onValidate) {
+      try {
+        setValidating(true);
+        await Promise.resolve(onValidate(code));
+      } finally {
+        setValidating(false);
+      }
+    }
   };
 
   const handleChange = (idx: number, val: string) => {
@@ -156,9 +158,9 @@ export const TokenVerificationModal: React.FC<Props> = ({
             className={styles.primaryBtn}
             type="button"
             onClick={handleValidate}
-            disabled={!digits.every((d) => d.length === 1)}
+            disabled={validating || !digits.every((d) => d.length === 1)}
           >
-            Confirmar código
+            {validating ? "Confirmando código..." : "Confirmar código"}
           </button>
         </div>
       </div>

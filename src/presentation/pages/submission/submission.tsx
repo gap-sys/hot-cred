@@ -38,6 +38,7 @@ export default function Submission() {
     handleSubmitContract,
   } = formHook;
   const [showTokenModal, setShowTokenModal] = useState(false);
+  const [sendingToken, setSendingToken] = useState(false);
 
   const isLoading = isSubmitting;
   const isInactiveProsseguir =
@@ -105,26 +106,37 @@ export default function Submission() {
                 isInactiveProsseguir || isInactiveCadastrar
                   ? S.nextBtnInactive
                   : ""
-              } ${isLoading ? S.loadingButton : ""}`}
+              } ${
+                (isLoading || sendingToken) && !showTokenModal
+                  ? S.loadingButton
+                  : ""
+              }`}
               onClick={async () => {
                 if (step < 1) {
                   handleNext();
                 } else {
+                  setSendingToken(true);
                   const sent = await formHook.handleSendToken();
-                  if (sent) {
-                    setShowTokenModal(true);
-                  }
+                  setSendingToken(false);
+                  if (sent) setShowTokenModal(true);
                 }
               }}
               disabled={
+                showTokenModal ||
                 isLoading ||
+                sendingToken ||
                 (step === 0 ? isInactiveProsseguir : isInactiveCadastrar)
               }
             >
-              {isLoading ? (
+              {isLoading && !showTokenModal ? (
                 <>
                   <FaSpinner className={S.spinner} style={{ marginRight: 8 }} />
                   Cadastrando...
+                </>
+              ) : sendingToken ? (
+                <>
+                  <FaSpinner className={S.spinner} style={{ marginRight: 8 }} />
+                  Enviando código...
                 </>
               ) : step === 1 ? (
                 "Cadastrar"

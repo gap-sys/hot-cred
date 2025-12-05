@@ -16,8 +16,24 @@ export async function GET(req: Request) {
       );
     }
     const url = `${VALIDAR_CPF_URL}?cpf=${cpf}`;
-    const resp = await axios.get(url);
-    return NextResponse.json(resp.data, { status: resp.status || 200 });
+    const resp = await axios.get(url, { validateStatus: () => true });
+    if (resp.status >= 200 && resp.status < 300) {
+      return NextResponse.json(resp.data, { status: 200 });
+    }
+    if (resp.status === 404) {
+      return NextResponse.json(
+        { valido: true, existe: false, mensagem: "CPF não encontrado" },
+        { status: 200 }
+      );
+    }
+    return NextResponse.json(
+      {
+        valido: false,
+        existe: false,
+        mensagem: "Validação de CPF indisponível",
+      },
+      { status: 200 }
+    );
   } catch (error: any) {
     return NextResponse.json(
       {
@@ -26,7 +42,7 @@ export async function GET(req: Request) {
         mensagem: "Validação de CPF indisponível",
         details: String(error),
       },
-      { status: 500 }
+      { status: 200 }
     );
   }
 }
