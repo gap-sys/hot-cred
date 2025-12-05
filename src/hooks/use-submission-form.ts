@@ -176,6 +176,21 @@ function useSubmissionFormInner() {
 
     if (name === "cpf") {
       setCpfValidado(cpf.isValid(value));
+      const digits = String(value || "").replace(/\D/g, "");
+      if (digits.length === 11 && cpf.isValid(value) && !loadingCpf) {
+        setTimeout(() => {
+          handleCpfBlur();
+        }, 0);
+      }
+    }
+
+    if (name === "cnpj") {
+      const digits = String(value || "").replace(/\D/g, "");
+      if (digits.length === 14 && cnpj.isValid(value) && !loadingCnpj) {
+        setTimeout(() => {
+          handleCnpjBlur();
+        }, 0);
+      }
     }
   };
 
