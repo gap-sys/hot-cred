@@ -17,7 +17,12 @@ export async function GET(req: Request) {
       );
     }
     const url = `${VALIDAR_CNPJ_URL}?cnpj=${cnpj}`;
-    const resp = await axios.get(url, { validateStatus: () => true });
+    console.log("[validar-cnpj] url", url);
+    const resp = await axios.get(url, {
+      validateStatus: () => true,
+      timeout: 8000,
+    });
+    console.log("[validar-cnpj] status", resp.status);
     if (resp.status >= 200 && resp.status < 300) {
       return NextResponse.json(resp.data, { status: 200 });
     }
@@ -36,6 +41,7 @@ export async function GET(req: Request) {
       { status: 200 }
     );
   } catch (error: any) {
+    console.error("[validar-cnpj] error", String(error));
     return NextResponse.json(
       {
         valido: false,

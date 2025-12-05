@@ -16,7 +16,12 @@ export async function GET(req: Request) {
       );
     }
     const url = `${VALIDAR_CPF_URL}?cpf=${cpf}`;
-    const resp = await axios.get(url, { validateStatus: () => true });
+    console.log("[validar-cpf] url", url);
+    const resp = await axios.get(url, {
+      validateStatus: () => true,
+      timeout: 8000,
+    });
+    console.log("[validar-cpf] status", resp.status);
     if (resp.status >= 200 && resp.status < 300) {
       return NextResponse.json(resp.data, { status: 200 });
     }
@@ -35,6 +40,7 @@ export async function GET(req: Request) {
       { status: 200 }
     );
   } catch (error: any) {
+    console.error("[validar-cpf] error", String(error));
     return NextResponse.json(
       {
         valido: false,

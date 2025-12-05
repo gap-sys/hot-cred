@@ -505,18 +505,26 @@ function useSubmissionFormInner() {
       });
       if (resp.status >= 200 && resp.status < 300) return true;
       const data: any = resp.data;
+      const rawMsg = (data && (data.message || data.error)) || "";
+      const msg =
+        resp.status === 400 ||
+        /c[oó]digo inv[aá]lido|token inv[aá]lido/i.test(rawMsg)
+          ? "Token inválido"
+          : rawMsg || "Falha ao validar token";
       setShowErrorModal(true);
-      setErrorMessages([
-        (data && (data.message || data.error)) || "Falha ao validar token",
-      ]);
+      setErrorMessages([msg]);
       return false;
     } catch (e: any) {
+      const status = e?.response?.status;
       const data = e?.response?.data;
+      const rawMsg = (data && (data.message || data.error)) || "";
+      const msg =
+        status === 400 ||
+        /c[oó]digo inv[aá]lido|token inv[aá]lido/i.test(rawMsg)
+          ? "Token inválido"
+          : rawMsg || "Erro inesperado ao validar token";
       setShowErrorModal(true);
-      setErrorMessages([
-        (data && (data.message || data.error)) ||
-          "Erro inesperado ao validar token",
-      ]);
+      setErrorMessages([msg]);
       return false;
     }
   };
