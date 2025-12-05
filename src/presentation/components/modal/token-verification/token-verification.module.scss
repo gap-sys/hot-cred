@@ -38,9 +38,11 @@
   margin-bottom: 12px;
 }
 
+@import "../../../styles/themes/light.scss";
+
 .digitGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 12px;
   margin: 12px 0 8px 0;
 }
@@ -56,8 +58,8 @@
 }
 
 .digitBox:focus {
-  border: 1.5px solid #f68733;
-  background: rgba(246, 135, 51, 0.08);
+  border: 1.5px solid $color-hotcred-primary;
+  background: rgba($color-hotcred-primary, 0.08);
 }
 
 .errorText {
@@ -77,7 +79,7 @@
 }
 
 .primaryBtn {
-  background: #f68733;
+  background: $color-hotcred-primary;
   color: #fff;
   border: none;
   font-size: 14px;
@@ -87,6 +89,12 @@
   border-radius: 6px;
   cursor: pointer;
   width: 100%;
+
+  &:disabled {
+    background: rgba($color-hotcred-primary, 0.08);
+    color: #fff;
+    cursor: not-allowed;
+  }
 }
 
 .secondaryBtn {

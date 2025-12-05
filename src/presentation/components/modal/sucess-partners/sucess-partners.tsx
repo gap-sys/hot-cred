@@ -8,7 +8,6 @@ import styles from "./sucess-partners.module.scss";
 export const SuccessPartnersModal = ({
   isOpen,
   onRequestClose,
-  contractSentSuccessfully = true,
 }: {
   isOpen: boolean;
   onRequestClose: () => void;
@@ -59,19 +58,16 @@ export const SuccessPartnersModal = ({
               <b>Cadastro enviado com sucesso!</b>
             </p>
             <p>
-              Recebemos suas informações e vamos validar seu perfil para liberar
-              sua parceria. Você receberá as próximas orientações por e-mail e
-              WhatsApp.
+              Nosso time vai avaliar seu perfil e, em caso de aprovação, você
+              receberá as orientações para iniciar a parceria por WhatsApp.
             </p>
-            <a
-              href="https://api.whatsapp.com/send?phone=5519993120568&text=Ol%C3%A1!%20Acabei%20de%20fazer%20o%20cadastro%20de%20parceria%20pelo%20site%20da%20HotCred."
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              type="button"
+              className={styles.button}
+              onClick={onRequestClose}
             >
-              <button className={styles.button}>
-                Falar com a equipe no WhatsApp
-              </button>
-            </a>
+              Fechar
+            </button>
           </>
         </div>
       </div>

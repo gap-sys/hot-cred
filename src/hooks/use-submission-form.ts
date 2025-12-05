@@ -1,15 +1,30 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import CryptoJS from "crypto-js";
 import { useSearchParams } from "next/navigation";
 
-import { SubmissionForm, SubmissionErrors, RegistrationType } from "src/@types";
-import { cpf } from "cpf-cnpj-validator";
+import axios from "axios";
+import CryptoJS from "crypto-js";
+import { cpf, cnpj } from "cpf-cnpj-validator";
+
 import {
   isCurrentStepValid as externalIsCurrentStepValid,
   validateStep as externalValidateStep,
 } from "src/presentation/components/ui/steps/validation";
+
+import { SubmissionForm, SubmissionErrors, RegistrationType } from "src/@types";
+
+const API_VALIDAR_CPF = "/api/validar-cpf";
+const API_VALIDAR_CNPJ = "/api/validar-cnpj";
+const API_CNPJ = "/api/cnpj";
+const API_SEND_TOKEN = "/api/send-token";
+const API_VALIDATE_TOKEN = "/api/validate-token";
+const API_CEP = "/api/cep";
+
+const SEJA_PARCEIRO_URL =
+  (process.env.NEXT_PUBLIC_SEJA_PARCEIRO_URL as string) ||
+  "https://hapi.hotcred.com.br/api/seja-parceiro";
+const CACHE_TTL_MS = Number(process.env.NEXT_PUBLIC_CACHE_TTL_MS || 86400000);
 
 export const INITIAL_FORM: SubmissionForm = {
   cpf: "",
@@ -41,8 +56,19 @@ function criptografar(dados: any, chave: string) {
   return CryptoJS.enc.Base64.stringify(combinado);
 }
 
+function createAxiosCancelToken(controller: AbortController) {
+  const source = axios.CancelToken.source();
+  controller.signal.addEventListener("abort", () => {
+    source.cancel("abort");
+  });
+  return source.token;
+}
+
 function useSubmissionFormInner() {
   const searchParams = useSearchParams();
+  const LS_KEY_CPF_VALIDATE = "hc_cache_cpf_validate";
+  const LS_KEY_CNPJ_VALIDATE = "hc_cache_cnpj_validate";
+  const LS_KEY_CNPJ_PREFILL = "hc_cache_cnpj_prefill";
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<SubmissionForm>({ ...INITIAL_FORM });
   const [tipoCadastro, setTipoCadastro] =
@@ -73,6 +99,7 @@ function useSubmissionFormInner() {
   const [loadingCep, setLoadingCep] = useState(false);
   const [loadingCnpj, setLoadingCnpj] = useState(false);
   const [loadingCpf, setLoadingCpf] = useState(false);
+  const [useOldSend, setUseOldSend] = useState(false);
 
   const cnpjDebounceRef = useRef<number | null>(null);
   const cnpjAbortRef = useRef<AbortController | null>(null);
@@ -81,8 +108,47 @@ function useSubmissionFormInner() {
   const lastPrefilledCnpjRef = useRef<string>("");
   const cpfDebounceRef = useRef<number | null>(null);
   const cpfAbortRef = useRef<AbortController | null>(null);
+  const cpfValidationCacheRef = useRef<Record<string, any>>({});
+  const cnpjValidationCacheRef = useRef<Record<string, any>>({});
+  const cnpjPrefillCacheRef = useRef<Record<string, any>>({});
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    try {
+      const now = Date.now();
+      const cpfRaw = localStorage.getItem(LS_KEY_CPF_VALIDATE);
+      const cnpjRaw = localStorage.getItem(LS_KEY_CNPJ_VALIDATE);
+      const prefillRaw = localStorage.getItem(LS_KEY_CNPJ_PREFILL);
+      const cpfCache = cpfRaw ? JSON.parse(cpfRaw) : {};
+      const cnpjCache = cnpjRaw ? JSON.parse(cnpjRaw) : {};
+      const prefillCache = prefillRaw ? JSON.parse(prefillRaw) : {};
+      const prune = (obj: Record<string, any>) => {
+        const out: Record<string, any> = {};
+        Object.keys(obj || {}).forEach((k) => {
+          const v = obj[k];
+          if (!v || typeof v !== "object") return;
+          const ts = v.ts || 0;
+          if (ts && now - ts > CACHE_TTL_MS) return;
+          out[k] = v;
+        });
+        return out;
+      };
+      cpfValidationCacheRef.current = prune(cpfCache);
+      cnpjValidationCacheRef.current = prune(cnpjCache);
+      cnpjPrefillCacheRef.current = prune(prefillCache);
+      localStorage.setItem(
+        LS_KEY_CPF_VALIDATE,
+        JSON.stringify(cpfValidationCacheRef.current)
+      );
+      localStorage.setItem(
+        LS_KEY_CNPJ_VALIDATE,
+        JSON.stringify(cnpjValidationCacheRef.current)
+      );
+      localStorage.setItem(
+        LS_KEY_CNPJ_PREFILL,
+        JSON.stringify(cnpjPrefillCacheRef.current)
+      );
+    } catch {}
+  }, []);
 
   useEffect(() => {
     const tipoRaw = searchParams.get("tipo");
@@ -92,6 +158,9 @@ function useSubmissionFormInner() {
     } else if (tipo === "pj" || tipo === "juridica") {
       setTipoCadastro("juridica");
     }
+    const enviarRaw = searchParams.get("enviar");
+    const enviar = (enviarRaw || "").toLowerCase();
+    setUseOldSend(enviar === "antigo");
   }, [searchParams]);
 
   const handleChange = (
@@ -120,18 +189,48 @@ function useSubmissionFormInner() {
       setErrors((prev) => ({ ...prev, cpf: "" }));
       return;
     }
+    if (!cpf.isValid(form.cpf)) {
+      if (cpfAbortRef.current) cpfAbortRef.current.abort();
+      setLoadingCpf(false);
+      setErrors((prev) => ({ ...prev, cpf: "CPF inválido" }));
+      return;
+    }
+    const cached = cpfValidationCacheRef.current[digits];
+    if (cached) {
+      setLoadingCpf(false);
+      setErrors((prev) => ({
+        ...prev,
+        cpf: cached.existe ? cached.mensagem || "CPF já cadastrado." : "",
+      }));
+      return;
+    }
     if (cpfDebounceRef.current) clearTimeout(cpfDebounceRef.current);
     setLoadingCpf(true);
     cpfDebounceRef.current = window.setTimeout(async () => {
       try {
         if (cpfAbortRef.current) cpfAbortRef.current.abort();
         cpfAbortRef.current = new AbortController();
-        const resp = await fetch(`/api/validar-cpf?cpf=${digits}`, {
-          cache: "no-store",
-          signal: cpfAbortRef.current.signal,
+        const resp = await axios.get(`${API_VALIDAR_CPF}?cpf=${digits}`, {
+          cancelToken: createAxiosCancelToken(cpfAbortRef.current),
         });
-        const data = await resp.json();
-        if (resp.ok && data && typeof data === "object") {
+        const data = resp.data;
+        if (
+          resp.status >= 200 &&
+          resp.status < 300 &&
+          data &&
+          typeof data === "object"
+        ) {
+          cpfValidationCacheRef.current[digits] = {
+            existe: !!data.existe,
+            mensagem: data.mensagem,
+            ts: Date.now(),
+          };
+          try {
+            localStorage.setItem(
+              LS_KEY_CPF_VALIDATE,
+              JSON.stringify(cpfValidationCacheRef.current)
+            );
+          } catch {}
           if (data.existe) {
             setErrors((prev) => ({
               ...prev,
@@ -142,7 +241,6 @@ function useSubmissionFormInner() {
           }
         }
       } catch (e) {
-        // Silenciar falhas de rede; não bloquear avanço
       } finally {
         setLoadingCpf(false);
       }
@@ -161,6 +259,21 @@ function useSubmissionFormInner() {
       setErrors((prev) => ({ ...prev, cnpj: "" }));
       return;
     }
+    if (!cnpj.isValid(form.cnpj)) {
+      if (cnpjAbortRef.current) cnpjAbortRef.current.abort();
+      setLoadingCnpj(false);
+      setErrors((prev) => ({ ...prev, cnpj: "CNPJ inválido" }));
+      return;
+    }
+    const cached = cnpjValidationCacheRef.current[digits];
+    if (cached) {
+      setLoadingCnpj(false);
+      setErrors((prev) => ({
+        ...prev,
+        cnpj: cached.existe ? cached.mensagem || "CNPJ já cadastrado." : "",
+      }));
+      return;
+    }
     if (cnpjDebounceRef.current) {
       clearTimeout(cnpjDebounceRef.current);
     }
@@ -169,12 +282,27 @@ function useSubmissionFormInner() {
       try {
         if (cnpjAbortRef.current) cnpjAbortRef.current.abort();
         cnpjAbortRef.current = new AbortController();
-        const resp = await fetch(`/api/validar-cnpj?cnpj=${digits}`, {
-          cache: "no-store",
-          signal: cnpjAbortRef.current.signal,
+        const resp = await axios.get(`${API_VALIDAR_CNPJ}?cnpj=${digits}`, {
+          cancelToken: createAxiosCancelToken(cnpjAbortRef.current),
         });
-        const data = await resp.json();
-        if (resp.ok && data && typeof data === "object") {
+        const data = resp.data;
+        if (
+          resp.status >= 200 &&
+          resp.status < 300 &&
+          data &&
+          typeof data === "object"
+        ) {
+          cnpjValidationCacheRef.current[digits] = {
+            existe: !!data.existe,
+            mensagem: data.mensagem,
+            ts: Date.now(),
+          };
+          try {
+            localStorage.setItem(
+              LS_KEY_CNPJ_VALIDATE,
+              JSON.stringify(cnpjValidationCacheRef.current)
+            );
+          } catch {}
           if (data.existe) {
             setErrors((prev) => ({
               ...prev,
@@ -206,6 +334,34 @@ function useSubmissionFormInner() {
       !form.razaoSocial || !form.nomeFantasia || !form.endereco;
     if (!needsPrefill) return;
     if (lastPrefilledCnpjRef.current === digits) return;
+    const cached = cnpjPrefillCacheRef.current[digits];
+    if (cached) {
+      setForm((prev) => ({
+        ...prev,
+        razaoSocial: cached.razao_social || prev.razaoSocial,
+        nomeFantasia: cached.nome_fantasia || prev.nomeFantasia,
+        endereco: cached.logradouro || prev.endereco,
+        numero: cached.numero || prev.numero,
+        bairro: cached.bairro || prev.bairro,
+        cep: cached.cep || prev.cep,
+        cidade: cached.cidade || prev.cidade,
+        estado: cached.uf || prev.estado,
+        complemento: cached.complemento || prev.complemento,
+      }));
+      setErrors((prev) => ({
+        ...prev,
+        razaoSocial: "",
+        nomeFantasia: "",
+        endereco: "",
+        numero: "",
+        bairro: "",
+        cep: "",
+        cidade: "",
+        estado: "",
+      }));
+      lastPrefilledCnpjRef.current = digits;
+      return;
+    }
     if (cnpjPrefillDebounceRef.current) {
       clearTimeout(cnpjPrefillDebounceRef.current);
     }
@@ -213,14 +369,22 @@ function useSubmissionFormInner() {
       try {
         if (cnpjPrefillAbortRef.current) cnpjPrefillAbortRef.current.abort();
         cnpjPrefillAbortRef.current = new AbortController();
-        const resp = await fetch("/api/cnpj", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ cnpj: digits }),
-          signal: cnpjPrefillAbortRef.current.signal,
-        });
-        if (resp.ok) {
-          const data = await resp.json();
+        const resp = await axios.post(
+          API_CNPJ,
+          { cnpj: digits },
+          {
+            cancelToken: createAxiosCancelToken(cnpjPrefillAbortRef.current),
+          }
+        );
+        if (resp.status >= 200 && resp.status < 300) {
+          const data = resp.data;
+          cnpjPrefillCacheRef.current[digits] = { ...data, ts: Date.now() };
+          try {
+            localStorage.setItem(
+              LS_KEY_CNPJ_PREFILL,
+              JSON.stringify(cnpjPrefillCacheRef.current)
+            );
+          } catch {}
           setForm((prev) => ({
             ...prev,
             razaoSocial: data.razao_social || prev.razaoSocial,
@@ -246,9 +410,7 @@ function useSubmissionFormInner() {
           }));
           lastPrefilledCnpjRef.current = digits;
         }
-      } catch {
-        // Silenciar; prefill é opcional
-      }
+      } catch {}
     }, 800) as unknown as number;
     return () => {
       if (cnpjPrefillDebounceRef.current)
@@ -265,13 +427,9 @@ function useSubmissionFormInner() {
     if (rawCep.length !== 8) return false;
     setLoadingCep(true);
     try {
-      const response = await fetch("/api/cep", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cep: rawCep }),
-      });
-      const data = await response.json();
-      if (response.ok) {
+      const response = await axios.post(API_CEP, { cep: rawCep });
+      const data = response.data;
+      if (response.status >= 200 && response.status < 300) {
         setForm((prev) => ({
           ...prev,
           endereco: data.logradouro || prev.endereco,
@@ -288,7 +446,7 @@ function useSubmissionFormInner() {
         }));
         return true;
       } else {
-        setErrors((prev) => ({ ...prev, cep: data.error || "CEP inválido" }));
+        setErrors((prev) => ({ ...prev, cep: data?.error || "CEP inválido" }));
         return false;
       }
     } catch (e) {
@@ -300,6 +458,68 @@ function useSubmissionFormInner() {
   };
 
   const handleCnpjBlur = async () => {};
+
+  const handleSendToken = async (): Promise<boolean> => {
+    const digits = (form.whatsapp || "").replace(/\D/g, "");
+    if (!digits || digits.length < 10) {
+      setShowErrorModal(true);
+      setErrorMessages(["Telefone inválido para envio de SMS"]);
+      return false;
+    }
+    try {
+      const resp = await axios.post(API_SEND_TOKEN, { telefone: digits });
+      if (resp.status >= 200 && resp.status < 300) return true;
+      const data: any = resp.data;
+      setShowErrorModal(true);
+      setErrorMessages([
+        (data && (data.message || data.error)) || "Falha ao enviar token",
+      ]);
+      return false;
+    } catch (e: any) {
+      const data = e?.response?.data;
+      setShowErrorModal(true);
+      setErrorMessages([
+        (data && (data.message || data.error)) || "Falha ao enviar token",
+      ]);
+      return false;
+    }
+  };
+
+  const handleValidateToken = async (token: string): Promise<boolean> => {
+    const phoneDigits = (form.whatsapp || "").replace(/\D/g, "");
+    const tokenDigits = String(token || "").replace(/\D/g, "");
+    if (!phoneDigits || phoneDigits.length < 10) {
+      setShowErrorModal(true);
+      setErrorMessages(["Telefone inválido para validação"]);
+      return false;
+    }
+    if (!tokenDigits || tokenDigits.length !== 6) {
+      setShowErrorModal(true);
+      setErrorMessages(["Token inválido"]);
+      return false;
+    }
+    try {
+      const resp = await axios.post(API_VALIDATE_TOKEN, {
+        telefone: phoneDigits,
+        token: tokenDigits,
+      });
+      if (resp.status >= 200 && resp.status < 300) return true;
+      const data: any = resp.data;
+      setShowErrorModal(true);
+      setErrorMessages([
+        (data && (data.message || data.error)) || "Falha ao validar token",
+      ]);
+      return false;
+    } catch (e: any) {
+      const data = e?.response?.data;
+      setShowErrorModal(true);
+      setErrorMessages([
+        (data && (data.message || data.error)) ||
+          "Erro inesperado ao validar token",
+      ]);
+      return false;
+    }
+  };
 
   const handleNext = async () => {
     if (step === 0 && loadingCpf) {
@@ -405,96 +625,29 @@ function useSubmissionFormInner() {
   };
 
   async function sendHotcredRequest(form: any) {
-    const baseUrl = "https://hapi.hotcred.com.br/api/seja-parceiro";
-    const cryptoKey = process.env.SEJA_PARCEIRO_CRIPTO;
-    let encryptedAll: string | null = null;
-    if (cryptoKey) {
-      const data = {
-        cpf: (form.cpf || "").replace(/\D/g, ""),
-        nome: form.fullName,
-        sexo: "1",
-        telefone: (form.whatsapp || "").replace(/\D/g, ""),
-        email: form.email,
-        nome_fantasia: form.nomeFantasia,
-        razao_social: form.razaoSocial,
-        cep: form.cep,
-        endereco: form.endereco,
-        numero: form.numero,
-        bairro: form.bairro,
-        cidade: form.cidade,
-        estado: form.estado,
-        banco: form.banco || "237",
-        agencia: form.agencia || "1548",
-        conta: form.conta || "21584",
-        tipo_chave_pix: form.tipo_chave_pix || "cpf",
-        chave_pix: form.chave_pix || (form.cpf || "").replace(/\D/g, ""),
-        cnpj: form.cnpj.replace(/\D/g, ""),
-      };
-
-      encryptedAll = criptografar(data, cryptoKey as string);
-    }
-
-    const baseQuery =
-      "?h=0368d36026ac6c3214ca19b8935db5563eca8a12d3908e02bd5d90bcd9faca63" +
-      "&p=5e583501" +
-      "&d=eyJpZF9jb3JiYW5fbWFya2V0aW5nIjo1LCJpZF9jb3JiYW4iOjEsInNlamFfcGFyY2Vpcm8iOjIsImlkX3RpcG9fY29yYmFuIjozLCJub21lX2NhbXBhbmhhIjoiQ2FtcGFuaGEgdGVzdGUiLCJleHBpcmFjYW8iOm51bGwsInRpbWVzdGFtcCI6MTc2NDc4NTcxMywibGlua0lkIjoiNWU1ODM1MDEifQ==";
-    const rawQuery =
-      "&cpf=" +
-      encodeURIComponent(form.cpf.replace(/\D/g, "")) +
-      "&nome=" +
-      encodeURIComponent(form.fullName) +
-      "&sexo=" +
-      encodeURIComponent("1") +
-      "&telefone=" +
-      encodeURIComponent(form.whatsapp.replace(/\D/g, "")) +
-      "&email=" +
-      encodeURIComponent(form.email) +
-      "&nome_fantasia=" +
-      encodeURIComponent(form.nomeFantasia) +
-      "&razao_social=" +
-      encodeURIComponent(form.razaoSocial) +
-      "&cep=" +
-      encodeURIComponent(form.cep) +
-      "&endereco=" +
-      encodeURIComponent(form.endereco) +
-      "&numero=" +
-      encodeURIComponent(form.numero) +
-      "&bairro=" +
-      encodeURIComponent(form.bairro) +
-      "&cidade=" +
-      encodeURIComponent(form.cidade) +
-      "&estado=" +
-      encodeURIComponent(form.estado) +
-      "&banco=" +
-      encodeURIComponent(form.banco || "237") +
-      "&agencia=" +
-      encodeURIComponent(form.agencia || "1548") +
-      "&conta=" +
-      encodeURIComponent(form.conta || "21584") +
-      "&tipo_chave_pix=" +
-      encodeURIComponent(form.tipo_chave_pix || "cpf") +
-      "&chave_pix=" +
-      encodeURIComponent(
-        form.chave_pix || (form.cpf || "").replace(/\D/g, "")
-      ) +
-      "&cnpj=" +
-      encodeURIComponent(form.cnpj.replace(/\D/g, ""));
-
-    const url =
-      baseUrl +
-      baseQuery +
-      (encryptedAll ? "&dados=" + encodeURIComponent(encryptedAll) : rawQuery);
-
-    const response = await fetch(url, {
-      method: "POST",
-    });
-
-    const text = await response.text();
-
-    return {
-      status: response.status,
-      body: text,
-    };
+    const h = searchParams.get("h");
+    const p = searchParams.get("p");
+    const d = searchParams.get("d");
+    const qs = new URLSearchParams();
+    if (h) qs.set("h", h);
+    if (p) qs.set("p", p);
+    if (d) qs.set("d", d);
+    const path = `/api/seja-parceiro${
+      qs.toString() ? `?${qs.toString()}` : ""
+    }`;
+    const resp = await axios.post(
+      path,
+      {
+        form,
+        tipo: tipoCadastro === "juridica" ? "PJ" : "PF",
+      },
+      {
+        validateStatus: () => true,
+      }
+    );
+    const body =
+      typeof resp.data === "string" ? resp.data : JSON.stringify(resp.data);
+    return { status: resp.status, body };
   }
 
   const handleSubmitContract = async () => {
@@ -619,6 +772,9 @@ function useSubmissionFormInner() {
     loadingCnpj,
     loadingCpf,
     handleSubmitContract,
+    handleSendToken,
+    handleValidateToken,
+    useOldSend,
   };
 }
 

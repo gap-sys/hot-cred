@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
 
+import axios from "axios";
+
+const PUBLICA_CNPJ_URL = "https://publica.cnpj.ws/cnpj";
+const BRASIL_API_CNPJ_URL = "https://brasilapi.com.br/api/cnpj/v1";
+
 const cnpjCache = new Map<
   string,
   { status: number; data: any; expires: number }
@@ -31,47 +36,49 @@ export async function POST(req: Request) {
     }
 
     const fetchPublica = async () => {
-      const res = await fetch(`https://publica.cnpj.ws/cnpj/${clean}`, {
-        cache: "no-store",
-      });
-      if (!res.ok) return { ok: false, status: res.status } as const;
-      const data = await res.json();
-      const formatted = {
-        razao_social: data?.razao_social || "",
-        nome_fantasia: data?.nome_fantasia || "",
-        logradouro: data?.estabelecimento?.logradouro || "",
-        numero: data?.estabelecimento?.numero || "",
-        bairro: data?.estabelecimento?.bairro || "",
-        cep: (data?.estabelecimento?.cep || "").replace(/\D/g, ""),
-        cidade: data?.estabelecimento?.cidade?.nome || "",
-        uf: data?.estabelecimento?.estado?.sigla || "",
-        complemento: data?.estabelecimento?.complemento || "",
-        telefone: data?.estabelecimento?.telefone1 || "",
-        email: data?.estabelecimento?.email || "",
-      };
-      return { ok: true, status: 200, data: formatted } as const;
+      try {
+        const res = await axios.get(`${PUBLICA_CNPJ_URL}/${clean}`);
+        const data = res.data;
+        const formatted = {
+          razao_social: data?.razao_social || "",
+          nome_fantasia: data?.nome_fantasia || "",
+          logradouro: data?.estabelecimento?.logradouro || "",
+          numero: data?.estabelecimento?.numero || "",
+          bairro: data?.estabelecimento?.bairro || "",
+          cep: (data?.estabelecimento?.cep || "").replace(/\D/g, ""),
+          cidade: data?.estabelecimento?.cidade?.nome || "",
+          uf: data?.estabelecimento?.estado?.sigla || "",
+          complemento: data?.estabelecimento?.complemento || "",
+          telefone: data?.estabelecimento?.telefone1 || "",
+          email: data?.estabelecimento?.email || "",
+        };
+        return { ok: true, status: 200, data: formatted } as const;
+      } catch (e: any) {
+        return { ok: false, status: e?.response?.status || 500 } as const;
+      }
     };
 
     const fetchBrasilApi = async () => {
-      const res = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${clean}`, {
-        cache: "no-store",
-      });
-      if (!res.ok) return { ok: false, status: res.status } as const;
-      const data = await res.json();
-      const formatted = {
-        razao_social: data?.razao_social || "",
-        nome_fantasia: data?.nome_fantasia || "",
-        logradouro: data?.logradouro || "",
-        numero: data?.numero || "",
-        bairro: data?.bairro || "",
-        cep: (data?.cep || "").replace(/\D/g, ""),
-        cidade: data?.municipio || data?.cidade || "",
-        uf: data?.uf || "",
-        complemento: data?.complemento || "",
-        telefone: data?.ddd_telefone_1 || data?.telefone || "",
-        email: data?.email || "",
-      };
-      return { ok: true, status: 200, data: formatted } as const;
+      try {
+        const res = await axios.get(`${BRASIL_API_CNPJ_URL}/${clean}`);
+        const data = res.data;
+        const formatted = {
+          razao_social: data?.razao_social || "",
+          nome_fantasia: data?.nome_fantasia || "",
+          logradouro: data?.logradouro || "",
+          numero: data?.numero || "",
+          bairro: data?.bairro || "",
+          cep: (data?.cep || "").replace(/\D/g, ""),
+          cidade: data?.municipio || data?.cidade || "",
+          uf: data?.uf || "",
+          complemento: data?.complemento || "",
+          telefone: data?.ddd_telefone_1 || data?.telefone || "",
+          email: data?.email || "",
+        };
+        return { ok: true, status: 200, data: formatted } as const;
+      } catch (e: any) {
+        return { ok: false, status: e?.response?.status || 500 } as const;
+      }
     };
 
     const primary = await fetchPublica();

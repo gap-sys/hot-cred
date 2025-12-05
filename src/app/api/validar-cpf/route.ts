@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
 
+import axios from "axios";
+
+const VALIDAR_CPF_URL =
+  process.env.VALIDAR_CPF_URL || "https://hapi.hotcred.com.br/api/validar-cpf";
+
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
@@ -10,13 +15,9 @@ export async function GET(req: Request) {
         { status: 400 }
       );
     }
-    const base =
-      process.env.VALIDAR_CPF_ENDPOINT ||
-      "http://localhost:8000/api/seja-parceiro/validar-cpf";
-    const url = `${base}?cpf=${cpf}`;
-    const resp = await fetch(url, { cache: "no-store" });
-    const data = await resp.json();
-    return NextResponse.json(data, { status: resp.status || 200 });
+    const url = `${VALIDAR_CPF_URL}?cpf=${cpf}`;
+    const resp = await axios.get(url);
+    return NextResponse.json(resp.data, { status: resp.status || 200 });
   } catch (error: any) {
     return NextResponse.json(
       {

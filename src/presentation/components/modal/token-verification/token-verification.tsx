@@ -20,14 +20,14 @@ export const TokenVerificationModal: React.FC<Props> = ({
   onResend,
   phoneMasked,
 }) => {
-  const [digits, setDigits] = useState<string[]>(["", "", "", ""]);
+  const [digits, setDigits] = useState<string[]>(["", "", "", "", "", ""]);
   const [error, setError] = useState("");
   const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
   const [countdown, setCountdown] = useState(45);
 
   useEffect(() => {
     if (!isOpen) return;
-    setDigits(["", "", "", ""]);
+    setDigits(["", "", "", "", "", ""]);
     setError("");
     setCountdown(45);
     const timer = setInterval(() => {
@@ -61,8 +61,8 @@ export const TokenVerificationModal: React.FC<Props> = ({
 
   const handleValidate = () => {
     const code = digits.join("").replace(/\D/g, "");
-    if (!code || code.length < 4) {
-      setError("Digite o código de 4 dígitos.");
+    if (!code || code.length < 6) {
+      setError("Digite o código de 6 dígitos.");
       return;
     }
     setError("");
@@ -95,10 +95,10 @@ export const TokenVerificationModal: React.FC<Props> = ({
     const text = e.clipboardData.getData("text").replace(/\D/g, "");
     if (!text) return;
     e.preventDefault();
-    const next = ["", "", "", ""];
-    for (let i = 0; i < Math.min(4, text.length); i++) next[i] = text[i];
+    const next = ["", "", "", "", "", ""];
+    for (let i = 0; i < Math.min(6, text.length); i++) next[i] = text[i];
     setDigits(next);
-    inputsRef.current[Math.min(3, text.length - 1)]?.focus();
+    inputsRef.current[Math.min(5, text.length - 1)]?.focus();
   };
 
   const handleResend = () => {
@@ -117,7 +117,7 @@ export const TokenVerificationModal: React.FC<Props> = ({
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.title}>Confirmação por SMS</div>
         <div className={styles.subtitle}>
-          Antes de finalizar seu cadastro, enviamos um código de 4 dígitos por
+          Antes de finalizar seu cadastro, enviamos um código de 6 dígitos por
           SMS para <strong>{phoneMasked || "seu número"}</strong>.
         </div>
         <div className={styles.digitGrid}>

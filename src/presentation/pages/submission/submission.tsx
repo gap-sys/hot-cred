@@ -18,7 +18,6 @@ import { Highlighter } from "src/presentation/components/ui/highlighter";
 import { useState } from "react";
 
 export default function Submission() {
-  const [showTokenModal, setShowTokenModal] = useState(false);
   const formHook = useSubmissionForm();
   const {
     step,
@@ -38,6 +37,7 @@ export default function Submission() {
     errorMessages,
     handleSubmitContract,
   } = formHook;
+  const [showTokenModal, setShowTokenModal] = useState(false);
 
   const isLoading = isSubmitting;
   const isInactiveProsseguir =
@@ -77,17 +77,6 @@ export default function Submission() {
     setShowSuccessModal(false);
   };
 
-  const maskedPhone = (() => {
-    const raw = (form.whatsapp || "").replace(/\D/g, "");
-    if (raw.length >= 10) {
-      const ddd = raw.slice(0, 2);
-      const first = raw[2] || "";
-      const last4 = raw.slice(-4);
-      return `(${ddd}) ${first}****-${last4}`;
-    }
-    return form.whatsapp || "";
-  })();
-
   return (
     <div className={S.container}>
       <div className={S.formWrapper}>
@@ -117,11 +106,14 @@ export default function Submission() {
                   ? S.nextBtnInactive
                   : ""
               } ${isLoading ? S.loadingButton : ""}`}
-              onClick={() => {
+              onClick={async () => {
                 if (step < 1) {
                   handleNext();
                 } else {
-                  setShowTokenModal(true);
+                  const sent = await formHook.handleSendToken();
+                  if (sent) {
+                    setShowTokenModal(true);
+                  }
                 }
               }}
               disabled={
@@ -147,16 +139,23 @@ export default function Submission() {
         isOpen={showSuccessModal}
         onRequestClose={handleSuccessModalClose}
       />
+
       <TokenVerificationModal
         isOpen={showTokenModal}
         onRequestClose={() => setShowTokenModal(false)}
-        phoneMasked={maskedPhone}
-        onResend={() => {}}
-        onValidate={() => {
-          setShowTokenModal(false);
-          setShowSuccessModal(true);
+        phoneMasked={form.whatsapp}
+        onResend={() => {
+          formHook.handleSendToken();
+        }}
+        onValidate={async (code) => {
+          const ok = await formHook.handleValidateToken(code);
+          if (ok) {
+            await formHook.handleSubmitContract();
+            setShowTokenModal(false);
+          }
         }}
       />
+
       <ErrorModal
         isOpen={showErrorModal}
         onRequestClose={() => setShowErrorModal(false)}

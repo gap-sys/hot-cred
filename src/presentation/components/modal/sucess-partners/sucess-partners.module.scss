@@ -56,14 +56,19 @@
 }
 
 .button {
-  background: $color-hotcred-primary;
-  color: #fff;
-  border: none;
+  border: 1px solid $color-hotcred-primary;
+  color: $color-hotcred-primary;
+  background: transparent;
   border-radius: 6px;
   font-size: 15px;
   font-weight: 500;
   padding: 12px 42px;
   cursor: pointer;
   width: 100%;
-  transition: background 0.2s;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: $color-hotcred-primary;
+    color: #fff;
+  }
 }
