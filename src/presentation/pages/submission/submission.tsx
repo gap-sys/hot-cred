@@ -55,6 +55,7 @@ export default function Submission() {
           loadingCnpj={formHook.loadingCnpj}
           handleCnpjBlur={formHook.handleCnpjBlur}
           loadingCpf={formHook.loadingCpf}
+          handleCpfBlur={formHook.handleCpfBlur}
         />
       );
     return (

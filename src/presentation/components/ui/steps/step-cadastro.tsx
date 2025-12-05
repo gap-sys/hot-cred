@@ -16,6 +16,7 @@ interface StepCadastroProps {
   loadingCnpj: boolean;
   handleCnpjBlur: () => void;
   loadingCpf: boolean;
+  handleCpfBlur: () => void;
 }
 
 export const StepCadastro: React.FC<StepCadastroProps> = ({
@@ -26,6 +27,7 @@ export const StepCadastro: React.FC<StepCadastroProps> = ({
   loadingCnpj,
   handleCnpjBlur,
   loadingCpf,
+  handleCpfBlur,
 }) => {
   const { fullName } = form;
   const fullNameError = errors.fullName;
@@ -95,6 +97,7 @@ export const StepCadastro: React.FC<StepCadastroProps> = ({
           <MaskedInput
             value={form.cpf}
             onChange={handleChange}
+            onBlur={() => handleCpfBlur()}
             id="cpf"
             name="cpf"
             mask={CPF_MASK}
